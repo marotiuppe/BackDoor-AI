@@ -3,13 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <link rel="icon" type="image/x-icon" href="backdoor-ai-be/icons/icon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>BackDoor AI — Stealth Real-Time Interview Co-Pilot</title>
   
-  <!-- 📈 Web Analytics (Plausible, Cloudflare, or Google Analytics) -->
-  <!-- Cloudflare Web Analytics -->
-   <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "fb2e8843e4704d029d9beb867f3f6b8a"}'></script>
-   <!-- End Cloudflare Web Analytics -->
+  <!-- Web Analytics -->
+  <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "fb2e8843e4704d029d9beb867f3f6b8a"}'></script>
   
   <!-- SEO Meta Tags -->
   <meta name="description" content="A privacy-first, ultra-low-latency Windows desktop interview companion. Intercepts audio and screen context to display structured talking points on a webcam-aligned stealth HUD.">
@@ -19,24 +17,24 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
   
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    /* Styling variables and custom properties */
     :root {
-      --bg-dark: #07080a;
-      --bg-card: rgba(17, 18, 22, 0.75);
+      --bg-dark: #07080b;
+      --bg-card: rgba(18, 20, 29, 0.7);
       --border-color: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(99, 102, 241, 0.3);
       --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
+      --text-muted: #a1a1aa;
       --indigo-accent: #6366f1;
-      --indigo-glow: rgba(99, 102, 241, 0.15);
+      --indigo-glow: rgba(99, 102, 241, 0.2);
       --emerald-accent: #10b981;
-      --font-outfit: 'Outfit', sans-serif;
-      --font-inter: 'Inter', sans-serif;
+      --font-outfit: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'Fira Code', monospace;
     }
 
@@ -47,35 +45,40 @@
       scroll-behavior: smooth;
     }
 
-    body {
+    html, body {
       background-color: var(--bg-dark);
       color: var(--text-main);
       font-family: var(--font-inter);
       overflow-x: hidden;
+      max-width: 100%;
+      width: 100%;
       line-height: 1.6;
+      position: relative;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Background Ambient Glows */
+    /* Ambient Background Glows */
     .glow-top-left {
       position: absolute;
-      top: -200px;
-      left: -200px;
-      width: 600px;
-      height: 600px;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(600px, 90vw);
+      height: 450px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.18) 0%, rgba(7, 8, 11, 0) 70%);
       pointer-events: none;
       z-index: 0;
     }
 
     .glow-bottom-right {
       position: absolute;
-      bottom: 200px;
-      right: -200px;
-      width: 600px;
-      height: 600px;
+      bottom: 250px;
+      right: -100px;
+      width: min(500px, 80vw);
+      height: 500px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.12) 0%, rgba(7, 8, 11, 0) 70%);
       pointer-events: none;
       z-index: 0;
     }
@@ -83,53 +86,63 @@
     /* Container */
     .container {
       max-width: 1200px;
+      width: 100%;
       margin: 0 auto;
       padding: 0 24px;
       position: relative;
       z-index: 10;
     }
 
-    /* Navigation Bar */
+    /* Sticky Navigation Header */
     header {
-      padding: 24px 0;
-      border-bottom: 1px solid var(--border-color);
-      backdrop-filter: blur(12px);
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       position: sticky;
       top: 0;
       z-index: 100;
-      background-color: rgba(7, 8, 10, 0.7);
+      background-color: rgba(7, 8, 11, 0.85);
+      width: 100%;
     }
 
     .nav-container {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 16px;
     }
 
     .logo {
       font-family: var(--font-outfit);
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 800;
       color: #fff;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 10px;
       text-decoration: none;
-      background: linear-gradient(135deg, #fff 40%, var(--indigo-accent) 100%);
+      letter-spacing: -0.3px;
+    }
+
+    .logo-text {
+      background: linear-gradient(135deg, #ffffff 40%, #a5b4fc 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .logo i {
-      -webkit-text-fill-color: initial;
-      color: var(--indigo-accent);
-      text-shadow: 0 0 10px var(--indigo-accent);
+    .logo img {
+      height: 28px;
+      width: 28px;
+      border-radius: 7px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      flex-shrink: 0;
     }
 
     nav {
       display: flex;
       align-items: center;
-      gap: 32px;
+      gap: 28px;
     }
 
     nav a {
@@ -137,140 +150,142 @@
       text-decoration: none;
       font-size: 14px;
       font-weight: 500;
-      transition: color 0.2s;
+      transition: color 0.2s ease;
     }
 
     nav a:hover {
       color: #fff;
     }
 
+    /* Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       padding: 10px 20px;
       border-radius: 12px;
       font-weight: 600;
-      font-size: 13px;
+      font-size: 13.5px;
       text-decoration: none;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
       cursor: pointer;
+      white-space: nowrap;
     }
 
     .btn-outline {
-      border: 1px solid var(--border-color);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       background-color: rgba(255, 255, 255, 0.03);
-      color: #fff;
+      color: #f3f4f6;
     }
 
     .btn-outline:hover {
       background-color: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.25);
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--indigo-accent) 0%, #4f46e5 100%);
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
       color: #fff;
-      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-      border: none;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     .btn-primary:hover {
       transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
-    }
-
-    .btn-primary:active {
-      transform: translateY(0);
+      box-shadow: 0 6px 25px rgba(99, 102, 241, 0.5);
     }
 
     /* Hero Section */
     .hero {
-      padding: 90px 0 60px;
+      padding: 70px 0 50px;
       text-align: center;
     }
 
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      background: rgba(99, 102, 241, 0.1);
-      border: 1px solid rgba(99, 102, 241, 0.2);
-      color: #818cf8;
-      font-size: 12px;
+      gap: 7px;
+      padding: 6px 16px;
+      border-radius: 24px;
+      background: rgba(99, 102, 241, 0.14);
+      border: 1px solid rgba(129, 140, 248, 0.35);
+      color: #c7d2fe;
+      font-size: 11.5px;
       font-weight: 600;
       margin-bottom: 24px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.18);
+    }
+
+    .badge i {
+      color: #818cf8;
     }
 
     .hero h1 {
       font-family: var(--font-outfit);
-      font-size: 54px;
+      font-size: clamp(28px, 5.5vw, 56px);
       font-weight: 800;
       line-height: 1.15;
       max-width: 900px;
       margin: 0 auto 20px;
-      color: #fff;
-      letter-spacing: -1px;
+      color: #ffffff;
+      letter-spacing: -0.5px;
     }
 
     .hero h1 span {
-      background: linear-gradient(to right, #a5b4fc, #818cf8);
+      background: linear-gradient(to right, #c7d2fe, #818cf8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .hero p {
-      font-size: 17px;
+      font-size: clamp(14px, 2vw, 17px);
       color: var(--text-muted);
       max-width: 680px;
       margin: 0 auto 36px;
       font-weight: 400;
+      line-height: 1.6;
     }
 
     .hero-ctas {
       display: flex;
       justify-content: center;
       gap: 16px;
-      margin-bottom: 60px;
+      margin-bottom: 50px;
     }
 
     .hero-ctas .btn {
       padding: 14px 28px;
-      font-size: 14px;
+      font-size: 14.5px;
     }
 
-    /* App Mockup Grid */
+    /* Mockup Container */
     .mockup-container {
-      max-width: 900px;
+      max-width: 860px;
+      width: 100%;
       margin: 0 auto;
       border-radius: 20px;
-      border: 1px solid var(--border-color);
-      background-color: rgba(10, 11, 14, 0.8);
-      padding: 10px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background-color: rgba(12, 14, 20, 0.95);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(99, 102, 241, 0.1);
       position: relative;
+      overflow: hidden;
     }
 
     .mockup-header {
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 8px 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       background-color: rgba(255, 255, 255, 0.02);
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
     }
 
     .dot {
-      width: 8px;
-      height: 8px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
-      background-color: rgba(255, 255, 255, 0.2);
     }
     
     .dot-red { background-color: #ef4444; }
@@ -278,66 +293,62 @@
     .dot-green { background-color: #22c55e; }
 
     .mockup-title {
-      font-size: 10px;
-      color: var(--text-muted);
-      margin-left: 10px;
+      font-size: 11px;
+      color: #94a3b8;
+      margin-left: 8px;
       font-family: var(--font-mono);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .mockup-view {
-      border-bottom-left-radius: 12px;
-      border-bottom-right-radius: 12px;
       position: relative;
-      background: linear-gradient(135deg, #111827 0%, #030712 100%);
+      background: radial-gradient(circle at 50% 10%, #171b2d 0%, #07090e 100%);
       aspect-ratio: 16/10;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      overflow: hidden;
+      padding: 32px 24px;
     }
 
     .webcam-sim {
-      width: 140px;
-      height: 100px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255,255,255,0.02);
+      width: 130px;
+      height: 80px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(8px);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       position: relative;
+      flex-shrink: 0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
     }
 
     .webcam-dot {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background-color: #10b981;
       position: absolute;
-      top: 10px;
-      box-shadow: 0 0 8px #10b981;
+      top: 12px;
+      box-shadow: 0 0 10px #10b981;
     }
 
-    /* Floating Glassmorphic HUD overlay simulation */
     .hud-sim {
-      position: absolute;
-      top: 140px;
-      width: 80%;
+      width: 90%;
       border-radius: 16px;
-      border: 1px solid rgba(99, 102, 241, 0.35);
-      background: rgba(11, 15, 25, 0.7);
-      backdrop-filter: blur(14px);
-      padding: 16px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
-      animation: floatHUD 4s ease-in-out infinite;
-    }
-
-    @keyframes floatHUD {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
+      border: 1px solid rgba(129, 140, 248, 0.35);
+      background: rgba(13, 16, 28, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 16px 20px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12);
     }
 
     .hud-sim-header {
@@ -346,90 +357,99 @@
       align-items: center;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       padding-bottom: 8px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .hud-tag {
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 700;
       color: #fff;
       background: var(--indigo-accent);
-      padding: 2px 8px;
-      border-radius: 10px;
+      padding: 3px 9px;
+      border-radius: 8px;
       text-transform: uppercase;
+      letter-spacing: 0.4px;
     }
 
     .hud-session {
-      font-size: 9px;
-      color: #a5b4fc;
+      font-size: 11px;
+      color: #c7d2fe;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+      font-weight: 500;
     }
 
     .hud-sim-content {
-      font-size: 11px;
+      font-size: 12px;
       text-align: left;
       font-family: var(--font-mono);
       color: var(--text-main);
-      space-y: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      line-height: 1.5;
     }
 
     .hud-line-q {
-      color: #f59e0b;
-      margin-bottom: 6px;
+      color: #fbbf24;
+      font-weight: 500;
+      word-break: break-word;
     }
 
     .hud-line-a {
       color: #38bdf8;
       border-left: 2px solid #38bdf8;
-      padding-left: 8px;
-      margin-left: 4px;
+      padding-left: 10px;
+      margin-left: 2px;
+      word-break: break-word;
     }
 
-    /* Core Features Grid */
+    /* Features Section */
     .features {
-      padding: 100px 0;
-      border-top: 1px solid var(--border-color);
+      padding: 90px 0 60px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     .section-title {
       text-align: center;
-      margin-bottom: 60px;
+      margin-bottom: 48px;
     }
 
     .section-title h2 {
       font-family: var(--font-outfit);
-      font-size: 38px;
+      font-size: clamp(26px, 4vw, 38px);
       font-weight: 800;
       color: #fff;
       margin-bottom: 12px;
+      letter-spacing: -0.3px;
     }
 
     .section-title p {
       font-size: 15px;
       color: var(--text-muted);
-      max-width: 500px;
+      max-width: 520px;
       margin: 0 auto;
     }
 
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
     }
 
     .feature-card {
-      border-radius: 16px;
-      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
       background-color: var(--bg-card);
-      padding: 32px;
+      padding: 28px 24px;
       transition: all 0.3s ease;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     .feature-card:hover {
-      border-color: rgba(99, 102, 241, 0.25);
+      border-color: rgba(99, 102, 241, 0.35);
       transform: translateY(-3px);
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
     }
@@ -437,71 +457,72 @@
     .icon-box {
       width: 44px;
       height: 44px;
-      border-radius: 10px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 18px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .ib-blue {
-      background-color: rgba(99, 102, 241, 0.1);
-      color: var(--indigo-accent);
-      border: 1px solid rgba(99, 102, 241, 0.15);
+      background-color: rgba(99, 102, 241, 0.12);
+      color: #818cf8;
+      border: 1px solid rgba(99, 102, 241, 0.25);
     }
 
     .ib-emerald {
-      background-color: rgba(16, 185, 129, 0.1);
-      color: var(--emerald-accent);
-      border: 1px solid rgba(16, 185, 129, 0.15);
+      background-color: rgba(16, 185, 129, 0.12);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.25);
     }
 
     .ib-amber {
-      background-color: rgba(245, 158, 11, 0.1);
-      color: #f59e0b;
-      border: 1px solid rgba(245, 158, 11, 0.15);
+      background-color: rgba(245, 158, 11, 0.12);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.25);
     }
 
     .feature-card h3 {
       font-family: var(--font-outfit);
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 700;
       color: #fff;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .feature-card p {
       font-size: 14px;
       color: var(--text-muted);
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
-    /* Privacy and Offline first banner */
+    /* Privacy Banner */
     .privacy-banner {
       border-radius: 24px;
-      border: 1px solid var(--border-color);
-      background: radial-gradient(circle at top left, rgba(99,102,241,0.06) 0%, rgba(17,18,22,0.85) 100%);
-      padding: 48px;
-      margin-bottom: 100px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.1) 0%, rgba(17, 20, 31, 0.9) 100%);
+      padding: 44px 40px;
+      margin-bottom: 80px;
       display: grid;
       grid-template-columns: 1.2fr 1fr;
       align-items: center;
-      gap: 40px;
+      gap: 36px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
     }
 
     .privacy-text h2 {
       font-family: var(--font-outfit);
-      font-size: 32px;
+      font-size: clamp(24px, 3.5vw, 32px);
       font-weight: 800;
       color: #fff;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .privacy-text p {
-      font-size: 15px;
+      font-size: 14.5px;
       color: var(--text-muted);
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       line-height: 1.6;
     }
 
@@ -514,18 +535,18 @@
     .p-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 8px;
-      background-color: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-color);
-      font-size: 12px;
-      color: #fff;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      background-color: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12.5px;
+      color: #f3f4f6;
       font-weight: 500;
     }
 
     .p-badge i {
-      color: var(--indigo-accent);
+      color: #818cf8;
     }
 
     .privacy-graphics {
@@ -535,20 +556,14 @@
     }
 
     .shield-icon {
-      font-size: 90px;
-      color: var(--indigo-accent);
-      filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.4));
-      animation: pulseShield 3s ease-in-out infinite;
-    }
-
-    @keyframes pulseShield {
-      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.3)); }
-      50% { transform: scale(1.03); filter: drop-shadow(0 0 25px rgba(99, 102, 241, 0.5)); }
+      font-size: 80px;
+      color: #6366f1;
+      filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.4));
     }
 
     /* FAQ Section */
     .faq {
-      padding-bottom: 100px;
+      padding-bottom: 80px;
     }
 
     .faq-list {
@@ -556,23 +571,23 @@
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
     }
 
     .faq-item {
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
       background-color: var(--bg-card);
       overflow: hidden;
-      transition: border-color 0.2s;
+      transition: all 0.2s ease;
     }
 
     .faq-item:hover {
-      border-color: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.16);
     }
 
     .faq-question {
-      padding: 20px 24px;
+      padding: 18px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -581,14 +596,18 @@
       font-size: 15px;
       color: #fff;
       user-select: none;
+      gap: 14px;
+      line-height: 1.4;
     }
 
     .faq-answer {
-      padding: 0 24px 20px;
+      padding: 0 20px 18px;
       font-size: 14px;
       color: var(--text-muted);
-      line-height: 1.5;
+      line-height: 1.6;
       display: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      padding-top: 14px;
     }
 
     .faq-item.active .faq-answer {
@@ -596,20 +615,22 @@
     }
 
     .faq-icon {
-      transition: transform 0.2s;
-      color: var(--text-muted);
+      transition: transform 0.2s ease;
+      color: #94a3b8;
+      font-size: 13px;
+      flex-shrink: 0;
     }
 
     .faq-item.active .faq-icon {
       transform: rotate(180deg);
-      color: #fff;
+      color: #818cf8;
     }
 
     /* Footer */
     footer {
-      border-top: 1px solid var(--border-color);
-      padding: 48px 0;
-      background-color: rgba(5, 6, 8, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 40px 0;
+      background-color: #050608;
       font-size: 13px;
       color: var(--text-muted);
     }
@@ -624,53 +645,204 @@
 
     .footer-links {
       display: flex;
-      gap: 24px;
+      gap: 20px;
     }
 
     .footer-links a {
       color: var(--text-muted);
       text-decoration: none;
-      transition: color 0.2s;
+      transition: color 0.2s ease;
     }
 
     .footer-links a:hover {
       color: #fff;
     }
 
-    /* Responsive */
+    /* Responsive Rules (Mobile & Tablet) */
     @media (max-width: 900px) {
-      .hero h1 {
-        font-size: 40px;
-      }
       .privacy-banner {
         grid-template-columns: 1fr;
-        padding: 32px;
+        padding: 36px 24px;
+        text-align: center;
       }
-      .shield-icon {
-        font-size: 70px;
+      .privacy-badge-list {
+        justify-content: center;
       }
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 650px) {
+      .container {
+        padding: 0 16px;
+      }
+
       header {
-        padding: 16px 0;
+        padding: 12px 0;
       }
+
+      .logo {
+        font-size: 16px;
+        gap: 8px;
+      }
+
+      .logo img {
+        height: 24px;
+        width: 24px;
+      }
+
       nav {
-        display: none; /* simple responsive */
+        display: none;
       }
+
+      .nav-container .btn {
+        padding: 7px 14px;
+        font-size: 12px;
+        border-radius: 10px;
+      }
+
+      .hero {
+        padding: 36px 0 20px;
+      }
+
+      .badge {
+        font-size: 11px;
+        padding: 6px 14px;
+        margin-bottom: 16px;
+      }
+
+      .desktop-only {
+        display: none;
+      }
+
       .hero h1 {
-        font-size: 32px;
+        font-size: 25px;
+        line-height: 1.28;
+        margin-bottom: 14px;
       }
+
       .hero p {
         font-size: 14px;
+        line-height: 1.55;
+        margin-bottom: 24px;
+        padding: 0 4px;
       }
+
       .hero-ctas {
         flex-direction: column;
-        align-items: stretch;
+        gap: 12px;
+        margin-bottom: 36px;
       }
-      .footer-container {
+
+      .hero-ctas .btn {
+        width: 100%;
+        height: 48px;
+        font-size: 14px;
+        border-radius: 12px;
+      }
+
+      /* Mockup Mobile Styling */
+      .mockup-container {
+        margin: 0;
+        border-radius: 16px;
+      }
+
+      .mockup-view {
+        aspect-ratio: auto;
+        padding: 20px 14px;
+      }
+
+      .webcam-sim {
+        width: 100px;
+        height: 60px;
+        margin-bottom: 14px;
+      }
+
+      .webcam-sim span {
+        font-size: 8px !important;
+        margin-top: 16px !important;
+        color: #cbd5e1 !important;
+      }
+
+      .hud-sim {
+        width: 100%;
+        padding: 14px;
+        border-radius: 12px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6);
+      }
+
+      .hud-sim-content {
+        font-size: 11px;
+        gap: 6px;
+      }
+
+      /* Features Mobile */
+      .features {
+        padding: 48px 0 24px;
+      }
+
+      .section-title {
+        margin-bottom: 30px;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .feature-card {
+        padding: 22px 18px;
+      }
+
+      /* Privacy Banner Mobile */
+      .privacy-banner {
+        padding: 28px 18px;
+        margin-bottom: 48px;
+        border-radius: 20px;
+      }
+
+      .privacy-badge-list {
         flex-direction: column;
+        gap: 8px;
+      }
+
+      .p-badge {
+        justify-content: center;
+        width: 100%;
+        padding: 9px 12px;
+      }
+
+      .shield-icon {
+        font-size: 54px;
+      }
+
+      /* FAQ Mobile */
+      .faq {
+        padding-bottom: 50px;
+      }
+
+      .faq-question {
+        padding: 15px 16px;
+        font-size: 14px;
+      }
+
+      .faq-answer {
+        padding: 0 16px 14px;
+        font-size: 13px;
+      }
+
+      /* Footer Mobile */
+      footer {
+        padding: 28px 0;
+      }
+
+      .footer-container {
+        flex-direction: column-reverse;
+        gap: 18px;
         text-align: center;
+      }
+
+      .footer-links {
+        justify-content: center;
+        gap: 16px;
       }
     }
   </style>
@@ -680,17 +852,18 @@
   <div class="glow-top-left"></div>
   <div class="glow-bottom-right"></div>
 
-  <!-- Sticky Navigation Header -->
+  <!-- Navigation Header -->
   <header>
     <div class="container nav-container">
       <a href="#" class="logo">
-        <i class="fa-solid fa-user-secret"></i> BackDoor AI
+        <img src="backdoor-ai-be/icons/icon.png" alt="BackDoor AI Logo" />
+        <span class="logo-text">BackDoor AI</span>
       </a>
       <nav>
         <a href="#features">Features</a>
         <a href="#privacy">Privacy</a>
         <a href="#faq">FAQ</a>
-        <a href="https://github.com/marotiuppe/BackDoor-AI" target="_blank">GitHub</a>
+        <a href="https://github.com/marotiuppe/BackDoor-AI" target="_blank" rel="noopener noreferrer">GitHub</a>
       </nav>
       <a href="https://github.com/marotiuppe/BackDoor-AI/releases/download/v1.0.0/BackDoor.AI.Setup.exe" class="btn btn-outline">
         <i class="fa-solid fa-download"></i> Download
@@ -703,7 +876,7 @@
     <div class="badge">
       <i class="fa-solid fa-shield-halved"></i> Stealth Capture Exclusion Enabled
     </div>
-    <h1>The Real-Time Intelligence Layer<br><span>for High-Stakes Interviews</span></h1>
+    <h1>The Real-Time Intelligence Layer<br class="desktop-only"> <span>for High-Stakes Interviews</span></h1>
     <p>
       An invisible, real-time Windows desktop co-pilot that transcribes dialogue, analyzes screen context, and displays structured talking points directly beneath your webcam lens.
     </p>
@@ -711,12 +884,12 @@
       <a href="https://github.com/marotiuppe/BackDoor-AI/releases/download/v1.0.0/BackDoor.AI.Setup.exe" class="btn btn-primary">
         <i class="fa-solid fa-download"></i> Download for Windows (x64)
       </a>
-      <a href="https://github.com/marotiuppe/BackDoor-AI" target="_blank" class="btn btn-outline">
+      <a href="https://github.com/marotiuppe/BackDoor-AI" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
         <i class="fa-brands fa-github"></i> View Repository
       </a>
     </div>
 
-    <!-- Animated UI Mockup -->
+    <!-- UI Mockup -->
     <div class="mockup-container">
       <div class="mockup-header">
         <div class="dot dot-red"></div>
@@ -732,7 +905,7 @@
         <div class="hud-sim">
           <div class="hud-sim-header">
             <span class="hud-tag">Smart Assist</span>
-            <span class="hud-session">📁 Google Tech Round</span>
+            <span class="hud-session"><i class="fa-regular fa-folder"></i> Google Tech Round</span>
           </div>
           <div class="hud-sim-content">
             <div class="hud-line-q">🗣️ Q: Can you design a rate limiter that is completely decentralized?</div>
@@ -745,7 +918,7 @@
     </div>
   </section>
 
-  <!-- Core Features Grid -->
+  <!-- Features Grid -->
   <section class="container features" id="features">
     <div class="section-title">
       <h2>Engineered for Performance</h2>
@@ -810,7 +983,7 @@
     </div>
   </section>
 
-  <!-- Privacy & Offline Focus Banner -->
+  <!-- Privacy Banner -->
   <section class="container" id="privacy">
     <div class="privacy-banner">
       <div class="privacy-text">
@@ -831,7 +1004,7 @@
     </div>
   </section>
 
-  <!-- Interactive FAQ Section -->
+  <!-- FAQ Section -->
   <section class="container faq" id="faq">
     <div class="section-title">
       <h2>Frequently Asked Questions</h2>
@@ -847,7 +1020,7 @@
           <i class="fa-solid fa-chevron-down faq-icon"></i>
         </div>
         <div class="faq-answer">
-          BackDoor AI applies Win32 hardware capture affinity (`WDA_EXCLUDEFROMCAPTURE`) to the HUD window. This tells the Windows DWM to omit rendering the HUD window contents on any print screen, screen recording, or video calling software (Zoom, Teams, Meets, Discord). Your screen shares will show only what is behind the HUD.
+          BackDoor AI applies Win32 hardware capture affinity (<code>WDA_EXCLUDEFROMCAPTURE</code>) to the HUD window. This tells the Windows DWM to omit rendering the HUD window contents on any print screen, screen recording, or video calling software (Zoom, Teams, Meets, Discord). Your screen shares will show only what is behind the HUD.
         </div>
       </div>
 
@@ -869,7 +1042,7 @@
           <i class="fa-solid fa-chevron-down faq-icon"></i>
         </div>
         <div class="faq-answer">
-          API keys are encrypted using Windows DPAPI and stored securely inside the Windows Credential Manager under the service name `BackDoorAI`. They are never saved in plaintext on disk, localStorage, or frontend memory, ensuring complete privacy.
+          API keys are encrypted using Windows DPAPI and stored securely inside the Windows Credential Manager under the service name <code>BackDoorAI</code>. They are never saved in plaintext on disk, localStorage, or frontend memory, ensuring complete privacy.
         </div>
       </div>
 
@@ -880,12 +1053,12 @@
           <i class="fa-solid fa-chevron-down faq-icon"></i>
         </div>
         <div class="faq-answer">
-          - `Alt + Shift + W`: Toggles the main workspace dashboard.<br>
-          - `Alt + I`: Toggles the Stealth HUD Overlay.<br>
-          - `Alt + Q`: Triggers a Quick Answer using audio transcription.<br>
-          - `Alt + S`: Captures screen area, runs OCR, and generates code solutions.<br>
-          - `Alt + H`: Cycles HUD opacity (Solid, Glass, Ghost).<br>
-          - `Alt + C`: Clears the HUD history.
+          - <code>Alt + Shift + W</code>: Toggles the main workspace dashboard.<br>
+          - <code>Alt + I</code>: Toggles the Stealth HUD Overlay.<br>
+          - <code>Alt + Q</code>: Triggers a Quick Answer using audio transcription.<br>
+          - <code>Alt + S</code>: Captures screen area, runs OCR, and generates code solutions.<br>
+          - <code>Alt + H</code>: Cycles HUD opacity (Solid, Glass, Ghost).<br>
+          - <code>Alt + C</code>: Clears the HUD history.
         </div>
       </div>
 
@@ -897,27 +1070,25 @@
     <div class="container footer-container">
       <div>
         <p>&copy; 2026 BackDoor AI. MIT License.</p>
-        <p style="font-size: 11px; margin-top: 4px; color: rgba(255,255,255,0.2);">Designed for professional assistance. Verify local consent laws before audio capture.</p>
+        <p style="font-size: 11.5px; margin-top: 4px; color: rgba(255,255,255,0.35);">Designed for professional assistance. Verify local consent laws before audio capture.</p>
       </div>
       <div class="footer-links">
         <a href="#features">Features</a>
         <a href="#privacy">Privacy</a>
         <a href="#faq">FAQ</a>
-        <a href="https://github.com/marotiuppe/BackDoor-AI" target="_blank">GitHub</a>
+        <a href="https://github.com/marotiuppe/BackDoor-AI" target="_blank" rel="noopener noreferrer">GitHub</a>
       </div>
     </div>
   </footer>
 
-  <!-- Simple FAQ Accordion Script -->
+  <!-- Accordion Script -->
   <script>
     const faqItems = document.querySelectorAll('.faq-item');
     faqItems.forEach(item => {
       const question = item.querySelector('.faq-question');
       question.addEventListener('click', () => {
         const isActive = item.classList.contains('active');
-        // Close all items
         faqItems.forEach(i => i.classList.remove('active'));
-        // If it wasn't active, open it
         if (!isActive) {
           item.classList.add('active');
         }
