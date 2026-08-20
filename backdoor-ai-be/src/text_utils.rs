@@ -38,6 +38,37 @@ pub fn is_duplicate_transcript(previous: &str, current: &str, change_threshold: 
     difference < change_threshold
 }
 
+/// Resolves the platform-appropriate directory for application local data storage.
+pub fn resolve_app_dir() -> std::path::PathBuf {
+    #[cfg(target_os = "windows")]
+    {
+        if let Ok(local_app_data) = std::env::var("LOCALAPPDATA") {
+            return std::path::PathBuf::from(local_app_data).join("com.backdoor.desktop");
+        }
+    }
+    #[cfg(target_os = "macos")]
+    {
+        if let Ok(home) = std::env::var("HOME") {
+            return std::path::PathBuf::from(home)
+                .join("Library")
+                .join("Application Support")
+                .join("com.backdoor.desktop");
+        }
+    }
+    #[cfg(target_os = "linux")]
+    {
+        if let Ok(home) = std::env::var("HOME") {
+            return std::path::PathBuf::from(home)
+                .join(".local")
+                .join("share")
+                .join("com.backdoor.desktop");
+        }
+    }
+
+    // Fallback for mobile (Android/iOS) or other environments where HOME might not be set
+    std::env::temp_dir().join("com.backdoor.desktop")
+}
+
 fn levenshtein_distance(s1: &str, s2: &str) -> usize {
     let v1: Vec<char> = s1.chars().collect();
     let v2: Vec<char> = s2.chars().collect();

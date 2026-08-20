@@ -1,0 +1,71 @@
+name: Release BackDoor AI
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger build on tags like v1.0.0, v1.1.0, etc.
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'macos-latest'
+            args: '--target universal-apple-darwin'
+          - platform: 'ubuntu-22.04'
+            args: ''
+          - platform: 'windows-latest'
+            args: ''
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: backdoor-ai-ui/package-lock.json
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'universal-apple-darwin' || '' }}
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: backdoor-ai-be -> target
+
+      - name: Install Linux dependencies (Ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev
+
+      - name: Install UI Dependencies
+        run: |
+          cd backdoor-ai-ui
+          npm install
+
+      - name: Install CLI Dependencies
+        run: |
+          cd backdoor-ai-be
+          npm install
+
+      - name: Build Tauri Application
+        uses: tauri-apps/tauri-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'BackDoor AI ${{ github.ref_name }}'
+          releaseBody: 'Privacy-first live interview assistant. Please select the installer matching your OS below.'
+          releaseDraft: true
+          prerelease: false
+          projectPath: 'backdoor-ai-be'
+          args: ${{ matrix.args }}

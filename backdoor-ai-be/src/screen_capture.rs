@@ -2,8 +2,11 @@ use crate::ocr_engine;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
+#[cfg(target_os = "windows")]
 use windows::Graphics::Imaging::{BitmapAlphaMode, BitmapEncoder, BitmapPixelFormat, SoftwareBitmap};
+#[cfg(target_os = "windows")]
 use windows::Storage::Streams::{DataReader, DataWriter, InMemoryRandomAccessStream};
+#[cfg(target_os = "windows")]
 use windows_sys::Win32::Graphics::Gdi::{BITMAPINFO, BITMAPINFOHEADER};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -191,11 +194,16 @@ pub fn to_base64(data: &[u8]) -> String {
     result
 }
 
+#[cfg(target_os = "windows")]
 type HDC = *mut core::ffi::c_void;
+#[cfg(target_os = "windows")]
 type HBITMAP = *mut core::ffi::c_void;
+#[cfg(target_os = "windows")]
 type HWND = *mut core::ffi::c_void;
+#[cfg(target_os = "windows")]
 type HGDIOBJ = *mut core::ffi::c_void;
 
+#[cfg(target_os = "windows")]
 #[link(name = "user32")]
 extern "system" {
     fn GetDC(hwnd: HWND) -> HDC;
@@ -203,6 +211,7 @@ extern "system" {
     fn GetSystemMetrics(nIndex: i32) -> i32;
 }
 
+#[cfg(target_os = "windows")]
 #[link(name = "gdi32")]
 extern "system" {
     fn CreateCompatibleDC(hdc: HDC) -> HDC;
@@ -247,16 +256,23 @@ extern "system" {
     ) -> i32;
 }
 
+#[cfg(target_os = "windows")]
 const SRCCOPY: u32 = 0x00CC0020;
+#[cfg(target_os = "windows")]
 const SM_CXSCREEN: i32 = 0;
+#[cfg(target_os = "windows")]
 const SM_CYSCREEN: i32 = 1;
+#[cfg(target_os = "windows")]
 const DIB_RGB_COLORS: u32 = 0;
+#[cfg(target_os = "windows")]
 const BI_RGB: u32 = 0;
 
+#[cfg(target_os = "windows")]
 struct ComGuard {
     com_init: bool,
 }
 
+#[cfg(target_os = "windows")]
 impl ComGuard {
     fn new() -> Self {
         unsafe {
@@ -264,7 +280,6 @@ impl ComGuard {
                 std::ptr::null_mut(),
                 windows_sys::Win32::System::Com::COINIT_MULTITHREADED as u32,
             );
-            // S_OK (0) means initialized successfully on this thread
             ComGuard {
                 com_init: hr_com == 0,
             }
@@ -272,6 +287,7 @@ impl ComGuard {
     }
 }
 
+#[cfg(target_os = "windows")]
 impl Drop for ComGuard {
     fn drop(&mut self) {
         unsafe {
@@ -282,8 +298,7 @@ impl Drop for ComGuard {
     }
 }
 
-/// RAII Guard that manages GDI device contexts and bitmaps safely.
-/// Guarantees all GDI handles are released in proper reverse order on Drop.
+#[cfg(target_os = "windows")]
 struct GdiCaptureGuard {
     hdc_screen: HDC,
     mem_dc: HDC,
@@ -291,6 +306,7 @@ struct GdiCaptureGuard {
     old_bitmap: HGDIOBJ,
 }
 
+#[cfg(target_os = "windows")]
 impl GdiCaptureGuard {
     fn new(width: i32, height: i32) -> Result<Self, String> {
         unsafe {
@@ -324,6 +340,7 @@ impl GdiCaptureGuard {
     }
 }
 
+#[cfg(target_os = "windows")]
 impl Drop for GdiCaptureGuard {
     fn drop(&mut self) {
         unsafe {
@@ -343,8 +360,7 @@ impl Drop for GdiCaptureGuard {
     }
 }
 
-/// Captures the primary monitor screen via GDI BitBlt, encodes to JPEG, and runs WinRT OCR.
-/// Returns (extracted_text, jpeg_base64) or error without ever panicking.
+#[cfg(target_os = "windows")]
 pub fn capture_screen_with_image() -> Result<(String, String), String> {
     let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
         let _com = ComGuard::new();
@@ -357,6 +373,7 @@ pub fn capture_screen_with_image() -> Result<(String, String), String> {
     }
 }
 
+#[cfg(target_os = "windows")]
 fn capture_screen_internal() -> Result<(String, String), String> {
     let width = unsafe { GetSystemMetrics(SM_CXSCREEN) };
     let height = unsafe { GetSystemMetrics(SM_CYSCREEN) };
@@ -381,7 +398,7 @@ fn capture_screen_internal() -> Result<(String, String), String> {
         let mut bmi: BITMAPINFO = std::mem::zeroed();
         bmi.bmiHeader.biSize = std::mem::size_of::<BITMAPINFOHEADER>() as u32;
         bmi.bmiHeader.biWidth = width;
-        bmi.bmiHeader.biHeight = -height; // top-down
+        bmi.bmiHeader.biHeight = -height;
         bmi.bmiHeader.biPlanes = 1;
         bmi.bmiHeader.biBitCount = 32;
         bmi.bmiHeader.biCompression = BI_RGB;
@@ -401,98 +418,94 @@ fn capture_screen_internal() -> Result<(String, String), String> {
         }
     }
 
-        // Convert to WinRT SoftwareBitmap via DataWriter
-        let stream = InMemoryRandomAccessStream::new()
-            .map_err(|e| format!("Failed to create InMemoryRandomAccessStream: {}", e))?;
-        let writer = DataWriter::CreateDataWriter(&stream)
-            .map_err(|e| format!("Failed to create DataWriter: {}", e))?;
-        writer
-            .WriteBytes(&pixels)
-            .map_err(|e| format!("Failed to write pixel data: {}", e))?;
-        let buffer = writer
-            .DetachBuffer()
-            .map_err(|e| format!("Failed to detach buffer: {}", e))?;
+    let stream = InMemoryRandomAccessStream::new()
+        .map_err(|e| format!("Failed to create InMemoryRandomAccessStream: {}", e))?;
+    let writer = DataWriter::CreateDataWriter(&stream)
+        .map_err(|e| format!("Failed to create DataWriter: {}", e))?;
+    writer
+        .WriteBytes(&pixels)
+        .map_err(|e| format!("Failed to write pixel data: {}", e))?;
+    let buffer = writer
+        .DetachBuffer()
+        .map_err(|e| format!("Failed to detach buffer: {}", e))?;
 
-        let bitmap = SoftwareBitmap::CreateCopyWithAlphaFromBuffer(
-            &buffer,
-            BitmapPixelFormat::Bgra8,
-            width,
-            height,
-            BitmapAlphaMode::Premultiplied,
-        )
-        .map_err(|e| format!("Failed to create SoftwareBitmap: {}", e))?;
+    let bitmap = SoftwareBitmap::CreateCopyWithAlphaFromBuffer(
+        &buffer,
+        BitmapPixelFormat::Bgra8,
+        width,
+        height,
+        BitmapAlphaMode::Premultiplied,
+    )
+    .map_err(|e| format!("Failed to create SoftwareBitmap: {}", e))?;
 
-        // 1. Run WinRT OCR
-        let ocr_text = crate::ocr_engine::OcrEngineWrapper::extract_text_from_bitmap(&bitmap)
-            .unwrap_or_default();
+    let ocr_text = crate::ocr_engine::OcrEngineWrapper::extract_text_from_bitmap(&bitmap)
+        .unwrap_or_default();
 
-        // 2. Downscale and encode to JPEG in-memory safely (to prevent prompt size exceeding Ollama context limits)
-        let max_dimension = 1024;
-        let mut scaled_width = width;
-        let mut scaled_height = height;
-        if width > max_dimension || height > max_dimension {
-            if width > height {
-                scaled_width = max_dimension;
-                scaled_height = (height as f64 * (max_dimension as f64 / width as f64)) as i32;
-            } else {
-                scaled_height = max_dimension;
-                scaled_width = (width as f64 * (max_dimension as f64 / height as f64)) as i32;
-            }
+    let max_dimension = 1024;
+    let mut scaled_width = width;
+    let mut scaled_height = height;
+    if width > max_dimension || height > max_dimension {
+        if width > height {
+            scaled_width = max_dimension;
+            scaled_height = (height as f64 * (max_dimension as f64 / width as f64)) as i32;
+        } else {
+            scaled_height = max_dimension;
+            scaled_width = (width as f64 * (max_dimension as f64 / height as f64)) as i32;
         }
+    }
 
-        let mut jpeg_b64 = String::new();
-        if let Ok(scaled_gdi) = GdiCaptureGuard::new(scaled_width, scaled_height) {
-            unsafe {
-                SetStretchBltMode(scaled_gdi.mem_dc, 4); // HALFTONE
-                SetBrushOrgEx(scaled_gdi.mem_dc, 0, 0, std::ptr::null_mut());
-                let blt_result = StretchBlt(
+    let mut jpeg_b64 = String::new();
+    if let Ok(scaled_gdi) = GdiCaptureGuard::new(scaled_width, scaled_height) {
+        unsafe {
+            SetStretchBltMode(scaled_gdi.mem_dc, 4);
+            SetBrushOrgEx(scaled_gdi.mem_dc, 0, 0, std::ptr::null_mut());
+            let blt_result = StretchBlt(
+                scaled_gdi.mem_dc,
+                0,
+                0,
+                scaled_width,
+                scaled_height,
+                gdi.hdc_screen,
+                0,
+                0,
+                width,
+                height,
+                SRCCOPY,
+            );
+            if blt_result != 0 {
+                let scaled_pixel_count = (scaled_width as usize) * (scaled_height as usize) * 4;
+                let mut scaled_pixels = vec![0u8; scaled_pixel_count];
+                let mut bmi: BITMAPINFO = std::mem::zeroed();
+                bmi.bmiHeader.biSize = std::mem::size_of::<BITMAPINFOHEADER>() as u32;
+                bmi.bmiHeader.biWidth = scaled_width;
+                bmi.bmiHeader.biHeight = -scaled_height;
+                bmi.bmiHeader.biPlanes = 1;
+                bmi.bmiHeader.biBitCount = 32;
+                bmi.bmiHeader.biCompression = BI_RGB;
+
+                let scan_lines = GetDIBits(
                     scaled_gdi.mem_dc,
+                    scaled_gdi.mem_bitmap,
                     0,
-                    0,
-                    scaled_width,
-                    scaled_height,
-                    gdi.hdc_screen,
-                    0,
-                    0,
-                    width,
-                    height,
-                    SRCCOPY,
+                    scaled_height as u32,
+                    scaled_pixels.as_mut_ptr() as *mut _,
+                    &mut bmi,
+                    DIB_RGB_COLORS,
                 );
-                if blt_result != 0 {
-                    let scaled_pixel_count = (scaled_width as usize) * (scaled_height as usize) * 4;
-                    let mut scaled_pixels = vec![0u8; scaled_pixel_count];
-                    let mut bmi: BITMAPINFO = std::mem::zeroed();
-                    bmi.bmiHeader.biSize = std::mem::size_of::<BITMAPINFOHEADER>() as u32;
-                    bmi.bmiHeader.biWidth = scaled_width;
-                    bmi.bmiHeader.biHeight = -scaled_height; // top-down
-                    bmi.bmiHeader.biPlanes = 1;
-                    bmi.bmiHeader.biBitCount = 32;
-                    bmi.bmiHeader.biCompression = BI_RGB;
 
-                    let scan_lines = GetDIBits(
-                        scaled_gdi.mem_dc,
-                        scaled_gdi.mem_bitmap,
-                        0,
-                        scaled_height as u32,
-                        scaled_pixels.as_mut_ptr() as *mut _,
-                        &mut bmi,
-                        DIB_RGB_COLORS,
-                    );
-
-                    if scan_lines != 0 {
-                        if let Ok(stream_out) = InMemoryRandomAccessStream::new() {
-                            if let Ok(writer) = DataWriter::CreateDataWriter(&stream_out) {
-                                if writer.WriteBytes(&scaled_pixels).is_ok() {
-                                    if let Ok(buffer) = writer.DetachBuffer() {
-                                        if let Ok(scaled_bitmap) = SoftwareBitmap::CreateCopyWithAlphaFromBuffer(
-                                            &buffer,
-                                            BitmapPixelFormat::Bgra8,
-                                            scaled_width,
-                                            scaled_height,
-                                            BitmapAlphaMode::Premultiplied,
-                                        ) {
-                                            jpeg_b64 = encode_jpeg_base64_safe(&scaled_bitmap);
-                                        }
+                if scan_lines != 0 {
+                    if let Ok(stream_out) = InMemoryRandomAccessStream::new() {
+                        if let Ok(writer) = DataWriter::CreateDataWriter(&stream_out) {
+                            if writer.WriteBytes(&scaled_pixels).is_ok() {
+                                if let Ok(buffer) = writer.DetachBuffer() {
+                                    if let Ok(scaled_bitmap) = SoftwareBitmap::CreateCopyWithAlphaFromBuffer(
+                                        &buffer,
+                                        BitmapPixelFormat::Bgra8,
+                                        scaled_width,
+                                        scaled_height,
+                                        BitmapAlphaMode::Premultiplied,
+                                    ) {
+                                        jpeg_b64 = encode_jpeg_base64_safe(&scaled_bitmap);
                                     }
                                 }
                             }
@@ -501,15 +514,16 @@ fn capture_screen_internal() -> Result<(String, String), String> {
                 }
             }
         }
+    }
 
-        if jpeg_b64.is_empty() {
-            // Fallback to full resolution if downscaling fails
-            jpeg_b64 = encode_jpeg_base64_safe(&bitmap);
-        }
+    if jpeg_b64.is_empty() {
+        jpeg_b64 = encode_jpeg_base64_safe(&bitmap);
+    }
 
-        Ok((ocr_text, jpeg_b64))
+    Ok((ocr_text, jpeg_b64))
 }
 
+#[cfg(target_os = "windows")]
 fn encode_jpeg_base64_safe(bitmap: &SoftwareBitmap) -> String {
     let bitmap_ref = std::panic::AssertUnwindSafe(bitmap);
     let result = std::panic::catch_unwind(move || {
@@ -544,19 +558,34 @@ fn encode_jpeg_base64_safe(bitmap: &SoftwareBitmap) -> String {
     result.unwrap_or_default()
 }
 
-/// Standalone GDI screen capture & OCR helper.
+#[cfg(target_os = "windows")]
 pub fn capture_screen_and_ocr() -> Result<String, String> {
     let (text, _) = capture_screen_with_image()?;
     Ok(text)
 }
 
-/// Helper to get the primary screen dimensions for diagnostic reporting.
+#[cfg(target_os = "windows")]
 pub fn get_screen_dimensions() -> (i32, i32) {
     unsafe {
         let width = GetSystemMetrics(SM_CXSCREEN);
         let height = GetSystemMetrics(SM_CYSCREEN);
         (width, height)
     }
+}
+
+#[cfg(not(target_os = "windows"))]
+pub fn capture_screen_with_image() -> Result<(String, String), String> {
+    Ok((String::new(), String::new()))
+}
+
+#[cfg(not(target_os = "windows"))]
+pub fn capture_screen_and_ocr() -> Result<String, String> {
+    Ok(String::new())
+}
+
+#[cfg(not(target_os = "windows"))]
+pub fn get_screen_dimensions() -> (i32, i32) {
+    (0, 0)
 }
 
 #[cfg(test)]

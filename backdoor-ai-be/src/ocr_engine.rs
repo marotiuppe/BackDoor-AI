@@ -1,10 +1,18 @@
+#[cfg(target_os = "windows")]
 use windows::core::HSTRING;
+#[cfg(target_os = "windows")]
 use windows::Globalization::Language;
+#[cfg(target_os = "windows")]
 use windows::Graphics::Imaging::SoftwareBitmap;
+#[cfg(target_os = "windows")]
 use windows::Media::Ocr::OcrEngine;
+
+#[cfg(not(target_os = "windows"))]
+pub struct SoftwareBitmap; // Dummy type to satisfy type checker on non-Windows platforms
 
 pub struct OcrEngineWrapper;
 
+#[cfg(target_os = "windows")]
 impl OcrEngineWrapper {
     /// Checks if Windows native WinRT OCR is supported for the current user language or standard fallback.
     pub fn is_ocr_supported() -> bool {
@@ -67,6 +75,19 @@ impl OcrEngineWrapper {
             Ok(res) => res,
             Err(_) => Err("WinRT OCR panic recovered".to_string()),
         }
+    }
+}
+
+#[cfg(not(target_os = "windows"))]
+impl OcrEngineWrapper {
+    /// Checks if Windows native WinRT OCR is supported for the current user language or standard fallback.
+    pub fn is_ocr_supported() -> bool {
+        false
+    }
+
+    /// Extracts recognized text from a WinRT SoftwareBitmap image buffer safely.
+    pub fn extract_text_from_bitmap(_bitmap: &SoftwareBitmap) -> Result<String, String> {
+        Err("OCR is not supported on this platform".to_string())
     }
 }
 

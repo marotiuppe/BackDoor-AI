@@ -1386,10 +1386,7 @@ pub fn run() {
         );
         eprintln!("{}", msg);
         
-        let local_app_data = std::env::var("LOCALAPPDATA").unwrap_or_else(|_| ".".to_string());
-        let log_dir = std::path::PathBuf::from(&local_app_data)
-            .join("com.backdoor.desktop")
-            .join("logs");
+        let log_dir = crate::text_utils::resolve_app_dir().join("logs");
         let _ = std::fs::create_dir_all(&log_dir);
 
         if let Ok(mut file) = std::fs::OpenOptions::new()
@@ -1750,7 +1747,7 @@ mod tests {
         let msgs = build_overlay_messages(&conn, prompt, "assist", "", "", "", None, None);
 
         let sys_content = msgs[0]["content"].as_str().unwrap();
-        assert!(sys_content.contains("CANDIDATE'S STAR EXPERIENCE MATRIX"));
+        assert!(sys_content.contains("<star_matrix>"));
         assert!(sys_content.contains("Order Service Optimization"));
         assert!(sys_content.contains("Deliver Results"));
     }

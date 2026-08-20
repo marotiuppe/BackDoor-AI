@@ -72,52 +72,76 @@ impl ProcessManager {
             self._job_handle = Some(h);
         }
 
-        // Resolve qdrant.exe binary path dynamically
+        #[cfg(any(target_os = "android", target_os = "ios"))]
+        {
+            println!("[ProcessManager] Mobile platform detected: skipping sidecar process spawning.");
+            return Ok(());
+        }
+
+        // Resolve binary name based on platform
+        let bin_name = if cfg!(target_os = "windows") { "qdrant.exe" } else { "qdrant" };
+
+        // Resolve executable directory
         let exe_dir = std::env::current_exe()
             .ok()
             .and_then(|p| p.parent().map(|p| p.to_path_buf()))
             .unwrap_or_else(|| std::path::PathBuf::from("."));
 
-        let local_app_data = std::env::var("LOCALAPPDATA").unwrap_or_else(|_| ".".to_string());
-        let app_dir = std::path::PathBuf::from(&local_app_data).join("com.backdoor.desktop");
-        let app_dir_qdrant = app_dir.join("qdrant.exe");
-        let app_dir_nested_qdrant = app_dir.join("qdrant").join("qdrant.exe");
+        let app_dir = crate::text_utils::resolve_app_dir();
+        let app_dir_qdrant = app_dir.join(bin_name);
+        let app_dir_nested_qdrant = app_dir.join("qdrant").join(bin_name);
 
-        // If qdrant.exe is missing, try to find and extract the zip file automatically
+        // If qdrant is missing, try to find and extract the zip file automatically
         if !app_dir_qdrant.exists() && !app_dir_nested_qdrant.exists() {
+            let zip_name = if cfg!(target_os = "windows") {
+                "qdrant-x86_64-pc-windows-msvc.zip"
+            } else if cfg!(target_os = "macos") {
+                "qdrant-x86_64-apple-darwin.zip"
+            } else {
+                "qdrant-x86_64-unknown-linux-gnu.zip"
+            };
+
             let zip_candidates = vec![
-                exe_dir.join("qdrant-x86_64-pc-windows-msvc.zip"),
-                exe_dir.join("resources").join("qdrant-x86_64-pc-windows-msvc.zip"),
-                exe_dir.join("resources").join("tools").join("qdrant-x86_64-pc-windows-msvc.zip"),
-                exe_dir.join("tools").join("qdrant-x86_64-pc-windows-msvc.zip"),
-                exe_dir.join("tools").join("qdrant").join("qdrant-x86_64-pc-windows-msvc.zip"),
-                std::path::PathBuf::from("qdrant-x86_64-pc-windows-msvc.zip"),
-                std::path::PathBuf::from("tools/qdrant-x86_64-pc-windows-msvc.zip"),
-                std::path::PathBuf::from("tools/qdrant/qdrant-x86_64-pc-windows-msvc.zip"),
-                std::path::PathBuf::from("../tools/qdrant-x86_64-pc-windows-msvc.zip"),
-                std::path::PathBuf::from("../tools/qdrant/qdrant-x86_64-pc-windows-msvc.zip"),
+                exe_dir.join(zip_name),
+                exe_dir.join("resources").join(zip_name),
+                exe_dir.join("resources").join("tools").join(zip_name),
+                exe_dir.join("tools").join(zip_name),
+                exe_dir.join("tools").join("qdrant").join(zip_name),
+                std::path::PathBuf::from(zip_name),
+                std::path::PathBuf::from(format!("tools/{}", zip_name)),
+                std::path::PathBuf::from(format!("tools/qdrant/{}", zip_name)),
+                std::path::PathBuf::from(format!("../tools/{}", zip_name)),
+                std::path::PathBuf::from(format!("../tools/qdrant/{}", zip_name)),
             ];
 
             if let Some(zip_path) = zip_candidates.into_iter().find(|p| p.exists()) {
                 println!("[ProcessManager] Found Qdrant archive at {:?}. Auto-extracting to AppData...", zip_path);
                 let _ = std::fs::create_dir_all(&app_dir);
-                // Windows has native tar.exe built-in since Win10 build 17063. We use it to unzip without external dependencies.
-                let extract_status = Command::new("tar")
-                    .arg("-xf")
-                    .arg(&zip_path)
-                    .arg("-C")
-                    .arg(&app_dir)
-                    .output();
+                let extract_status = if cfg!(target_os = "windows") {
+                    Command::new("tar")
+                        .arg("-xf")
+                        .arg(&zip_path)
+                        .arg("-C")
+                        .arg(&app_dir)
+                        .output()
+                } else {
+                    Command::new("unzip")
+                        .arg("-o")
+                        .arg(&zip_path)
+                        .arg("-d")
+                        .arg(&app_dir)
+                        .output()
+                };
                 match extract_status {
                     Ok(out) => {
                         if out.status.success() {
                             println!("[ProcessManager] Auto-extraction successful.");
                         } else {
-                            println!("[ProcessManager] tar extraction failed: {}", String::from_utf8_lossy(&out.stderr));
+                            println!("[ProcessManager] extraction failed: {}", String::from_utf8_lossy(&out.stderr));
                         }
                     }
                     Err(e) => {
-                        println!("[ProcessManager] Failed to launch tar utility: {}", e);
+                        println!("[ProcessManager] Failed to launch extraction utility: {}", e);
                     }
                 }
             }
@@ -126,20 +150,20 @@ impl ProcessManager {
         let candidate_paths = vec![
             app_dir_qdrant,
             app_dir_nested_qdrant,
-            exe_dir.join("qdrant.exe"),
-            exe_dir.join("tools").join("qdrant.exe"),
-            exe_dir.join("tools").join("qdrant").join("qdrant.exe"),
-            std::path::PathBuf::from("qdrant.exe"),
-            std::path::PathBuf::from("tools/qdrant.exe"),
-            std::path::PathBuf::from("tools/qdrant/qdrant.exe"),
-            std::path::PathBuf::from("../tools/qdrant.exe"),
-            std::path::PathBuf::from("../tools/qdrant/qdrant.exe"),
+            exe_dir.join(bin_name),
+            exe_dir.join("tools").join(bin_name),
+            exe_dir.join("tools").join("qdrant").join(bin_name),
+            std::path::PathBuf::from(bin_name),
+            std::path::PathBuf::from(format!("tools/{}", bin_name)),
+            std::path::PathBuf::from(format!("tools/qdrant/{}", bin_name)),
+            std::path::PathBuf::from(format!("../tools/{}", bin_name)),
+            std::path::PathBuf::from(format!("../tools/qdrant/{}", bin_name)),
         ];
 
         let qdrant_binary = candidate_paths
             .into_iter()
             .find(|p| p.exists())
-            .unwrap_or_else(|| std::path::PathBuf::from("qdrant.exe"));
+            .unwrap_or_else(|| std::path::PathBuf::from(bin_name));
 
         let log_dir = app_dir.join("logs");
         let _ = std::fs::create_dir_all(&log_dir);
@@ -170,7 +194,7 @@ impl ProcessManager {
 
         match qdrant_cmd {
             Ok(child) => {
-                println!("[ProcessManager] Spawned qdrant.exe sidecar ({:?}) with PID {}", qdrant_binary, child.id());
+                println!("[ProcessManager] Spawned qdrant sidecar ({:?}) with PID {}", qdrant_binary, child.id());
                 #[cfg(target_os = "windows")]
                 if let Some(h) = shared_job {
                     assign_process_to_job(h, child.id());
@@ -178,7 +202,7 @@ impl ProcessManager {
                 self._qdrant_child = Some(child);
             }
             Err(e) => {
-                println!("[ProcessManager] Notice: qdrant.exe not found or failed to launch at {:?}: {}. Skipping vector sidecar for now.", qdrant_binary, e);
+                println!("[ProcessManager] Notice: qdrant sidecar not found or failed to launch at {:?}: {}. Skipping vector sidecar for now.", qdrant_binary, e);
             }
         }
 

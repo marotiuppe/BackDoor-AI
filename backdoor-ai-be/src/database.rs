@@ -27,9 +27,9 @@ pub struct Message {
 }
 
 pub fn init_db() -> Result<Connection, rusqlite::Error> {
-    let local_app_data = std::env::var("LOCALAPPDATA").unwrap_or_else(|_| ".".to_string());
-    let new_app_dir = std::path::PathBuf::from(&local_app_data).join("com.backdoor.desktop");
-    let old_app_dir = std::path::PathBuf::from(&local_app_data).join("com.mypersonalai.desktop");
+    let new_app_dir = crate::text_utils::resolve_app_dir();
+    let parent_dir = new_app_dir.parent().unwrap_or(&new_app_dir);
+    let old_app_dir = parent_dir.join("com.mypersonalai.desktop");
     
     let _ = fs::create_dir_all(&new_app_dir);
 

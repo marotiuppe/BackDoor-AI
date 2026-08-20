@@ -13,6 +13,7 @@ pub struct OverlayStatus {
 
 /// Applies Windows native screen-capture exclusion (WDA_EXCLUDEFROMCAPTURE = 0x11)
 /// to make the HUD window completely invisible to screen shares, screenshots, and OBS.
+#[cfg(target_os = "windows")]
 pub fn apply_capture_exclusion(window: &WebviewWindow, exclude: bool) -> Result<bool, String> {
     let raw_hwnd = window
         .hwnd()
@@ -53,6 +54,12 @@ pub fn apply_capture_exclusion(window: &WebviewWindow, exclude: bool) -> Result<
             Err(format!("SetWindowDisplayAffinity failed with error code: {}", err_code))
         }
     }
+}
+
+#[cfg(not(target_os = "windows"))]
+pub fn apply_capture_exclusion(_window: &WebviewWindow, _exclude: bool) -> Result<bool, String> {
+    // Capture exclusion is native to Windows DWM. We return Ok(false) on other targets.
+    Ok(false)
 }
 
 pub struct OverlayManager {
