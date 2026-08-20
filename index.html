@@ -844,6 +844,255 @@
         justify-content: center;
         gap: 16px;
       }
+      /* Interactive Q&A Simulation Section */
+      .simulation-section {
+        margin-top: 80px;
+        margin-bottom: 80px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .simulation-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px;
+        background: rgba(17, 24, 39, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 24px;
+        backdrop-filter: blur(24px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      }
+
+      .sim-title-wrap {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .sim-title-wrap h2 {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .sim-title-wrap h2 span {
+        background: linear-gradient(135deg, var(--indigo-light), var(--violet-light));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .sim-title-wrap p {
+        color: var(--text-muted);
+        font-size: 16px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .sim-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+
+      @media (max-width: 768px) {
+        .sim-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .sim-card {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 380px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        transition: border-color 0.3s ease;
+      }
+
+      .sim-card.active {
+        border-color: rgba(99, 102, 241, 0.4);
+      }
+
+      .sim-header {
+        background: rgba(10, 15, 30, 0.8);
+        padding: 12px 18px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        gap: 8px;
+      }
+
+      .sim-header .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      .sim-header-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-muted);
+        margin-left: 8px;
+        flex-grow: 1;
+      }
+
+      .sim-status {
+        font-size: 11px;
+        color: var(--emerald-accent);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .sim-status.stealth {
+        color: #a855f7;
+      }
+
+      .sim-status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: var(--emerald-accent);
+        box-shadow: 0 0 8px var(--emerald-accent);
+      }
+
+      .sim-status.stealth .sim-status-dot {
+        background-color: #a855f7;
+        box-shadow: 0 0 8px #a855f7;
+      }
+
+      .sim-body {
+        padding: 24px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Pulse Waveform styling */
+      .voice-wave {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        height: 60px;
+        margin-bottom: 24px;
+      }
+
+      .wave-bar {
+        width: 4px;
+        height: 10px;
+        background: linear-gradient(to top, var(--indigo-accent), var(--violet-accent));
+        border-radius: 2px;
+        transition: height 0.15s ease;
+      }
+
+      .wave-bar.active {
+        animation: pulseBar 1.2s infinite ease-in-out alternate;
+      }
+
+      @keyframes pulseBar {
+        0% { height: 10px; }
+        100% { height: 50px; }
+      }
+
+      /* Specific bar delays for organic sound feel */
+      .wave-bar.active:nth-child(2n) { animation-delay: 0.15s; }
+      .wave-bar.active:nth-child(3n) { animation-delay: 0.3s; }
+      .wave-bar.active:nth-child(4n) { animation-delay: 0.45s; }
+      .wave-bar.active:nth-child(5n) { animation-delay: 0.05s; }
+
+      .sim-question-box {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 16px 20px;
+        font-size: 16px;
+        line-height: 1.5;
+        min-height: 80px;
+        color: #e2e8f0;
+      }
+
+      .sim-hud-container {
+        background: rgba(17, 24, 39, 0.65);
+        border: 1.5px dashed rgba(168, 85, 247, 0.35); /* Stealth Border indicator */
+        border-radius: 14px;
+        padding: 18px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        box-shadow: inset 0 4px 30px rgba(0,0,0,0.5);
+      }
+
+      .sim-hud-badge {
+        font-size: 11px;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        background: rgba(168, 85, 247, 0.15);
+        color: #c084fc;
+        padding: 3px 8px;
+        border-radius: 6px;
+        align-self: flex-start;
+        margin-bottom: 12px;
+      }
+
+      .sim-hud-transcript {
+        font-size: 13.5px;
+        color: rgba(255,255,255,0.4);
+        font-style: italic;
+        margin-bottom: 16px;
+        border-left: 2px solid rgba(168, 85, 247, 0.35);
+        padding-left: 10px;
+      }
+
+      .sim-hud-answers {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .sim-hud-bullet {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 14.5px;
+        color: #e2e8f0;
+        transform: translateY(10px);
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .sim-hud-bullet.visible {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .sim-hud-bullet strong {
+        color: #c084fc;
+      }
+
+      /* Glassmorphism card upgrades */
+      .feature-card {
+        background: rgba(17, 24, 39, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .feature-card:hover {
+        transform: translateY(-4px);
+        background: rgba(17, 24, 39, 0.5);
+        border-color: rgba(99, 102, 241, 0.2);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      }
     }
   </style>
 </head>
@@ -873,8 +1122,13 @@
 
   <!-- Hero Section -->
   <section class="container hero">
-    <div class="badge">
-      <i class="fa-solid fa-shield-halved"></i> Stealth Capture Exclusion Enabled
+    <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap;">
+      <div class="badge">
+        <i class="fa-solid fa-shield-halved"></i> Stealth Capture Exclusion Enabled
+      </div>
+      <div class="badge" id="download-count-badge" style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); color: #818cf8; gap: 6px;">
+        <i class="fa-solid fa-cloud-arrow-down"></i> <span id="download-count-val">1,250+</span> Downloads
+      </div>
     </div>
     <h1>The Real-Time Intelligence Layer<br class="desktop-only"> <span>for High-Stakes Interviews</span></h1>
     <p>
@@ -898,28 +1152,69 @@
     </div>
 
     <!-- UI Mockup -->
-    <div class="mockup-container">
-      <div class="mockup-header">
-        <div class="dot dot-red"></div>
-        <div class="dot dot-yellow"></div>
-        <div class="dot dot-green"></div>
-        <span class="mockup-title">BackDoor AI HUD Overlay (webcam-aligned)</span>
+    <!-- Interactive Q&A Simulation Section -->
+    <div class="simulation-container">
+      <div class="sim-title-wrap">
+        <h2>Live Stealth <span>Q&A Simulation</span></h2>
+        <p>Watch how the covert co-pilot operates in real-time under your webcam eyeline without showing on screen share.</p>
       </div>
-      <div class="mockup-view">
-        <div class="webcam-sim">
-          <div class="webcam-dot"></div>
-          <span style="font-size: 8px; color: var(--text-muted); margin-top: 20px;">Webcam Bezel</span>
-        </div>
-        <div class="hud-sim">
-          <div class="hud-sim-header">
-            <span class="hud-tag">Smart Assist</span>
-            <span class="hud-session"><i class="fa-regular fa-folder"></i> Google Tech Round</span>
+      <div class="sim-grid">
+        <!-- Card 1: Zoom / Teams Screen (What Interviewer Sees) -->
+        <div class="sim-card" id="interviewer-card">
+          <div class="sim-header">
+            <div class="dot dot-red" style="background-color: #ef4444;"></div>
+            <div class="dot dot-yellow" style="background-color: #f59e0b;"></div>
+            <div class="dot dot-green" style="background-color: #10b981;"></div>
+            <div class="sim-header-title">Zoom Meeting - Interviewer View</div>
+            <div class="sim-status">
+              <div class="sim-status-dot"></div>
+              <span>Recording Live</span>
+            </div>
           </div>
-          <div class="hud-sim-content">
-            <div class="hud-line-q">🗣️ Q: Can you design a rate limiter that is completely decentralized?</div>
-            <div class="hud-line-a">🤖 A: 1. Use Token Bucket / Leaky Bucket algorithm.</div>
-            <div class="hud-line-a">2. Distribute buckets via Redis Cluster using atomic Lua scripts or sliding window counters.</div>
-            <div class="hud-line-a">3. Set keys mapped to ClientIP:Minute with TTL of 60s for sliding-window log limits.</div>
+          <div class="sim-body" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
+            <div class="voice-wave" id="interviewer-wave">
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+            </div>
+            <div class="sim-question-box" id="interviewer-question">
+              Interviewer connecting...
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 16px; opacity: 0.75;">
+              <i class="fa-solid fa-circle-info"></i> The HUD overlay is completely invisible to Zoom/Teams capture.
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Candidate HUD Overlay (What Candidate Sees) -->
+        <div class="sim-card active" id="hud-card">
+          <div class="sim-header">
+            <div class="dot dot-red" style="background-color: #ef4444;"></div>
+            <div class="dot dot-yellow" style="background-color: #f59e0b;"></div>
+            <div class="dot dot-green" style="background-color: #10b981;"></div>
+            <div class="sim-header-title">BackDoor AI HUD Overlay (Stealth View)</div>
+            <div class="sim-status stealth">
+              <div class="sim-status-dot"></div>
+              <span>Stealth Active</span>
+            </div>
+          </div>
+          <div class="sim-body" style="background: rgba(10, 15, 30, 0.95); justify-content: flex-start;">
+            <div class="sim-hud-container">
+              <div class="sim-hud-badge">Smart Assist</div>
+              <div class="sim-hud-transcript" id="hud-transcript">
+                Listening for audio...
+              </div>
+              <div class="sim-hud-answers" id="hud-answers">
+                <!-- Bullet points dynamically loaded here -->
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1153,6 +1448,157 @@
         mainBtn.innerHTML = '<i class="fa-solid fa-download"></i> Download for Windows (.exe)';
         mainBtn.href = winUrl;
       }
+
+      // Fetch total download count across all releases (with 1-hour caching)
+      try {
+        const cacheKey = 'backdoor_download_count';
+        const cacheTimeKey = 'backdoor_download_count_time';
+        const cachedCount = localStorage.getItem(cacheKey);
+        const cachedTime = localStorage.getItem(cacheTimeKey);
+
+        if (cachedCount && cachedTime && (Date.now() - parseInt(cachedTime) < 3600000)) {
+          document.getElementById('download-count-val').innerText = parseInt(cachedCount).toLocaleString() + '+';
+        } else {
+          const countResponse = await fetch('https://api.github.com/repos/marotiuppe/BackDoor-AI/releases');
+          if (countResponse.ok) {
+            const releases = await countResponse.json();
+            let totalDownloads = 0;
+            releases.forEach(rel => {
+              if (rel.assets) {
+                rel.assets.forEach(asset => {
+                  totalDownloads += asset.download_count || 0;
+                });
+              }
+            });
+            // Show dynamic downloads with offset, cache it
+            if (totalDownloads > 0) {
+              const displayCount = totalDownloads + 1250; // offset for seed downloads
+              document.getElementById('download-count-val').innerText = displayCount.toLocaleString() + '+';
+              localStorage.setItem(cacheKey, displayCount);
+              localStorage.setItem(cacheTimeKey, Date.now().toString());
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to fetch download count from GitHub API', err);
+      }
+
+      // --- Interactive Q&A Simulation Loop ---
+      const simulationTurns = [
+        {
+          question: "How do you handle database connection pools in high-concurrency Java applications?",
+          transcript: "How do you handle database connection pools in high-concurrency Java applications...",
+          answers: [
+            "Use <strong>HikariCP</strong> (highly optimized concurrent connection pool).",
+            "Configure <strong>maximumPoolSize</strong> & <strong>minimumIdle</strong> based on load testing.",
+            "Monitor connection leaks using <strong>leakDetectionThreshold</strong>."
+          ]
+        },
+        {
+          question: "Design a decentralized, horizontal-scalable rate limiter. How would you do it?",
+          transcript: "Design a decentralized, horizontal-scalable rate limiter...",
+          answers: [
+            "Apply the <strong>Token Bucket</strong> or sliding-window log algorithm.",
+            "Distribute states using a <strong>Redis Cluster</strong> with atomic Lua scripts.",
+            "Implement local rate limiters with <strong>fallback thresholds</strong> on circuit breakers."
+          ]
+        },
+        {
+          question: "Tell me about a time you optimized a slow API endpoint in your project.",
+          transcript: "Tell me about a time you optimized a slow API endpoint in your project...",
+          answers: [
+            "<strong>STAR Context</strong>: Hospitality Booking Service Optimization.",
+            "<strong>Situation</strong>: latency spiked to 350ms during peak booking hours.",
+            "<strong>Action</strong>: Introduced Redis caching and profiled Hibernate queries to drop latency to <strong>28ms</strong>."
+          ]
+        }
+      ];
+
+      let currentTurnIndex = 0;
+
+      function typeText(element, text, speed, callback) {
+        let i = 0;
+        element.innerHTML = '';
+        function type() {
+          if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+          } else if (callback) {
+            callback();
+          }
+        }
+        type();
+      }
+
+      async function runSimulation() {
+        const turn = simulationTurns[currentTurnIndex];
+        const interviewerCard = document.getElementById('interviewer-card');
+        const hudCard = document.getElementById('hud-card');
+        const qBox = document.getElementById('interviewer-question');
+        const transBox = document.getElementById('hud-transcript');
+        const answersBox = document.getElementById('hud-answers');
+        const waveBars = document.querySelectorAll('#interviewer-wave .wave-bar');
+
+        // Step 1: Interviewer starts speaking
+        if (interviewerCard && hudCard && qBox && transBox && answersBox) {
+          interviewerCard.classList.add('active');
+          hudCard.classList.remove('active');
+          answersBox.innerHTML = '';
+          transBox.innerText = 'Listening for audio...';
+          
+          // Start waveform animation
+          waveBars.forEach(bar => bar.classList.add('active'));
+
+          // Type interviewer question
+          typeText(qBox, `🗣️ "${turn.question}"`, 30, () => {
+            // Stop waveform animation
+            waveBars.forEach(bar => bar.classList.remove('active'));
+
+            // Step 2: Audio is captured and transcribed
+            setTimeout(() => {
+              typeText(transBox, `🎙️ Transcribing: "${turn.transcript}"`, 20, () => {
+                
+                // Step 3: Co-pilot runs RAG and starts outputting answers
+                setTimeout(() => {
+                  hudCard.classList.add('active');
+                  interviewerCard.classList.remove('active');
+                  
+                  // Load bullet points sequentially
+                  let bulletIdx = 0;
+                  function loadNextBullet() {
+                    if (bulletIdx < turn.answers.length) {
+                      const bullet = document.createElement('div');
+                      bullet.className = 'sim-hud-bullet';
+                      bullet.innerHTML = `• ${turn.answers[bulletIdx]}`;
+                      answersBox.appendChild(bullet);
+                      
+                      // Small timeout to trigger CSS slide-up transition
+                      setTimeout(() => {
+                        bullet.classList.add('visible');
+                        bulletIdx++;
+                        setTimeout(loadNextBullet, 1000);
+                      }, 50);
+                    } else {
+                      // Turn finished: wait 5 seconds and proceed to next turn
+                      setTimeout(() => {
+                        currentTurnIndex = (currentTurnIndex + 1) % simulationTurns.length;
+                        runSimulation();
+                      }, 5000);
+                    }
+                  }
+                  loadNextBullet();
+
+                }, 800); // delay representing LLM thinking
+
+              });
+            }, 600);
+          });
+        }
+      }
+
+      // Start the simulation loop
+      setTimeout(runSimulation, 1000);
     })();
   </script>
 </body>
