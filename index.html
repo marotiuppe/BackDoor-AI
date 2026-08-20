@@ -839,42 +839,37 @@
         gap: 18px;
         text-align: center;
       }
-
       .footer-links {
         justify-content: center;
         gap: 16px;
       }
-      /* Interactive Q&A Simulation Section */
-      .simulation-section {
-        margin-top: 80px;
-        margin-bottom: 80px;
-        position: relative;
-        z-index: 2;
-      }
+    }
 
-      .simulation-container {
-        max-width: 1000px;
-        margin: 0 auto;
-        padding: 40px;
-        background: rgba(17, 24, 39, 0.45);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 24px;
-        backdrop-filter: blur(24px);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-      }
+    .simulation-section {
+      margin-top: 80px;
+      margin-bottom: 80px;
+      position: relative;
+      z-index: 2;
+    }
 
-      .sim-title-wrap {
-        text-align: center;
-        margin-bottom: 40px;
-      }
+    .simulation-container {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 40px;
+      background: rgba(17, 24, 39, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 24px;
+      backdrop-filter: blur(24px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
 
-      .sim-title-wrap h2 {
-        font-size: 32px;
-        font-weight: 700;
-        margin-bottom: 12px;
-      }
+    .sim-title-wrap h2 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
 
-      .sim-title-wrap h2 span {
+    .sim-title-wrap h2 span {
         background: linear-gradient(135deg, var(--indigo-light), var(--violet-light));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -883,111 +878,210 @@
       .sim-title-wrap p {
         color: var(--text-muted);
         font-size: 16px;
-        max-width: 600px;
+        max-width: 650px;
         margin: 0 auto;
       }
 
-      .sim-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 32px;
-      }
-
-      @media (max-width: 768px) {
-        .sim-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      .sim-card {
-        background: rgba(15, 23, 42, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 16px;
-        overflow: hidden;
+      /* View Toggle Switch */
+      .sim-toggle-container {
         display: flex;
-        flex-direction: column;
-        height: 380px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        transition: border-color 0.3s ease;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
       }
 
-      .sim-card.active {
-        border-color: rgba(99, 102, 241, 0.4);
-      }
-
-      .sim-header {
-        background: rgba(10, 15, 30, 0.8);
-        padding: 12px 18px;
+      .sim-toggle-btn {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--text-muted);
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s ease;
         display: flex;
         align-items: center;
-        border-bottom: 1px solid rgba(255,255,255,0.06);
         gap: 8px;
       }
 
-      .sim-header .dot {
-        width: 10px;
-        height: 10px;
+      .sim-toggle-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+      }
+
+      .sim-toggle-btn.active {
+        background: linear-gradient(135deg, var(--indigo-accent), var(--violet-accent));
+        border-color: transparent;
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+      }
+
+      /* Desktop monitor housing */
+      .desktop-monitor {
+        border: 12px solid #1e293b;
+        border-bottom-width: 20px;
+        border-radius: 20px 20px 0 0;
+        background: #0f172a;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .monitor-bezel-top {
+        height: 24px;
+        background: #0f172a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        border-bottom: 1px solid rgba(255,255,255,0.03);
+      }
+
+      .monitor-webcam {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #000;
+        box-shadow: inset 0 0 2px rgba(255,255,255,0.5);
+        position: relative;
+      }
+
+      .monitor-webcam::after {
+        content: '';
+        position: absolute;
+        right: -12px;
+        top: 2px;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #10b981; /* Green recording LED indicator */
+        box-shadow: 0 0 6px #10b981;
+      }
+
+      /* Screen Background */
+      .desktop-screen {
+        height: 450px;
+        background: radial-gradient(circle at 50% 50%, #1e1e38 0%, #0c0d19 100%);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Simulated Zoom Meeting Application */
+      .zoom-app {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background: #000;
+      }
+
+      .zoom-header {
+        background: #18181b;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #27272a;
+      }
+
+      .zoom-window-dots {
+        display: flex;
+        gap: 6px;
+      }
+
+      .zoom-dot {
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
       }
 
-      .sim-header-title {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--text-muted);
-        margin-left: 8px;
-        flex-grow: 1;
+      .zoom-title {
+        font-size: 11px;
+        color: #a1a1aa;
+        font-weight: 500;
       }
 
-      .sim-status {
+      /* Zoom Video Grid */
+      .zoom-grid {
+        flex-grow: 1;
+        display: grid;
+        grid-template-columns: 1fr;
+        position: relative;
+        background: #09090b;
+      }
+
+      /* Interviewer Video Area */
+      .zoom-video-main {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      /* Simulated Interviewer Profile/Video Feed */
+      .interviewer-feed-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        z-index: 1;
+      }
+
+      .interviewer-avatar {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+        border: 2px solid rgba(255,255,255,0.1);
+      }
+
+      .interviewer-name {
+        color: #f4f4f5;
+        font-size: 15px;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .interviewer-label {
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 4px 8px;
+        border-radius: 4px;
+        color: #f4f4f5;
         font-size: 11px;
-        color: var(--emerald-accent);
         font-weight: 500;
         display: flex;
         align-items: center;
         gap: 6px;
       }
 
-      .sim-status.stealth {
-        color: #a855f7;
-      }
-
-      .sim-status-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background-color: var(--emerald-accent);
-        box-shadow: 0 0 8px var(--emerald-accent);
-      }
-
-      .sim-status.stealth .sim-status-dot {
-        background-color: #a855f7;
-        box-shadow: 0 0 8px #a855f7;
-      }
-
-      .sim-body {
-        padding: 24px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-      }
-
-      /* Pulse Waveform styling */
-      .voice-wave {
+      /* Interviewer Audio Waveform overlays the video */
+      .interviewer-wave-container {
         display: flex;
         align-items: center;
-        justify-content: center;
         gap: 4px;
-        height: 60px;
-        margin-bottom: 24px;
+        height: 40px;
+        margin-top: 10px;
       }
 
       .wave-bar {
-        width: 4px;
-        height: 10px;
-        background: linear-gradient(to top, var(--indigo-accent), var(--violet-accent));
+        width: 3px;
+        height: 8px;
+        background: var(--indigo-light);
         border-radius: 2px;
         transition: height 0.15s ease;
       }
@@ -997,86 +1091,410 @@
       }
 
       @keyframes pulseBar {
-        0% { height: 10px; }
-        100% { height: 50px; }
+        0% { height: 6px; }
+        100% { height: 35px; }
       }
 
-      /* Specific bar delays for organic sound feel */
       .wave-bar.active:nth-child(2n) { animation-delay: 0.15s; }
       .wave-bar.active:nth-child(3n) { animation-delay: 0.3s; }
       .wave-bar.active:nth-child(4n) { animation-delay: 0.45s; }
       .wave-bar.active:nth-child(5n) { animation-delay: 0.05s; }
 
-      .sim-question-box {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+      /* Interviewer Text bubble */
+      .interviewer-speech-bubble {
+        margin-top: 20px;
+        background: rgba(24, 24, 27, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.06);
         border-radius: 12px;
-        padding: 16px 20px;
-        font-size: 16px;
+        padding: 12px 18px;
+        max-width: 450px;
+        text-align: center;
+        font-size: 13.5px;
+        color: #e4e4e7;
         line-height: 1.5;
-        min-height: 80px;
-        color: #e2e8f0;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
       }
 
-      .sim-hud-container {
-        background: rgba(17, 24, 39, 0.65);
-        border: 1.5px dashed rgba(168, 85, 247, 0.35); /* Stealth Border indicator */
-        border-radius: 14px;
-        padding: 18px;
-        height: 100%;
+      /* Zoom candidate self view PIP */
+      .zoom-pip {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        width: 120px;
+        height: 80px;
+        background: #18181b;
+        border: 1.5px solid #3f3f46;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .zoom-pip-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #4f46e5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: #fff;
+        font-weight: 600;
+      }
+
+      .zoom-pip-label {
+        position: absolute;
+        bottom: 4px;
+        left: 4px;
+        font-size: 9px;
+        color: #a1a1aa;
+        background: rgba(0,0,0,0.6);
+        padding: 1px 4px;
+        border-radius: 2px;
+      }
+
+      /* Zoom App Toolbar bottom */
+      .zoom-toolbar {
+        background: #18181b;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid #27272a;
+      }
+
+      .zoom-actions {
+        display: flex;
+        gap: 16px;
+        margin: 0 auto;
+      }
+
+      .zoom-btn {
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
-        box-shadow: inset 0 4px 30px rgba(0,0,0,0.5);
+        align-items: center;
+        gap: 4px;
+        color: #a1a1aa;
+        font-size: 9px;
+        cursor: pointer;
+        width: 48px;
       }
 
-      .sim-hud-badge {
-        font-size: 11px;
-        text-transform: uppercase;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        background: rgba(168, 85, 247, 0.15);
-        color: #c084fc;
-        padding: 3px 8px;
-        border-radius: 6px;
-        align-self: flex-start;
-        margin-bottom: 12px;
+      .zoom-btn i {
+        font-size: 14px;
+        color: #e4e4e7;
       }
 
-      .sim-hud-transcript {
-        font-size: 13.5px;
-        color: rgba(255,255,255,0.4);
-        font-style: italic;
-        margin-bottom: 16px;
-        border-left: 2px solid rgba(168, 85, 247, 0.35);
-        padding-left: 10px;
+      .zoom-btn.red i {
+        color: #f43f5e;
       }
 
-      .sim-hud-answers {
+      .zoom-btn.green i {
+        color: #22c55e;
+      }
+
+      /* -------------------------------------------------------------
+         THE CO-PILOT HUD OVERLAY (Floating glassmorphic app window - Actual UI Replica)
+         ------------------------------------------------------------- */
+      .hud-app-sim {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 820px; /* Wider to match actual widescreen desktop overlay */
+        background: #0d0f12;
+        border: 1px solid #1f2937;
+        border-radius: 12px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        padding: 12px 16px;
+        z-index: 10;
         display: flex;
         flex-direction: column;
         gap: 12px;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none;
       }
 
-      .sim-hud-bullet {
+      .hud-app-sim.stealth-hidden {
+        opacity: 0 !important;
+        transform: translate(-50%, -10px);
+      }
+
+      /* Control Bar */
+      .hud-control-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .hud-control-left {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .hud-pill {
+        font-size: 11px;
+        font-weight: 600;
+        color: #9ca3af;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 4px 10px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .hud-pill.red-status {
+        background: rgba(239, 68, 68, 0.12);
+        border-color: rgba(239, 68, 68, 0.4);
+        color: #ef4444;
+      }
+
+      .hud-control-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .hud-session-badge {
+        font-size: 11px;
+        font-weight: 500;
+        color: #fbbf24; /* yellow folder */
+        background: rgba(251, 191, 36, 0.08);
+        border: 1px solid rgba(251, 191, 36, 0.2);
+        padding: 4px 10px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .hud-btn-main {
+        font-size: 11px;
+        font-weight: 700;
+        background: #2563eb;
+        color: #fff;
+        border: none;
+        padding: 5px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .hud-select {
+        font-size: 11px;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #e5e7eb;
+        padding: 4px 8px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .hud-btn-close {
+        color: #9ca3af;
+        background: transparent;
+        border: none;
+        font-size: 12px;
+        cursor: pointer;
+        padding: 2px;
+      }
+
+      /* Status Bar */
+      .hud-status-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: #9ca3af;
+        background: rgba(255,255,255,0.02);
+        padding: 6px 10px;
+        border-radius: 6px;
+        border-left: 3px solid #10b981;
+      }
+
+      .status-dot-green {
+        width: 6px;
+        height: 6px;
+        background-color: #10b981;
+        border-radius: 50%;
+        box-shadow: 0 0 6px #10b981;
+      }
+
+      /* Main Content Box */
+      .hud-content-box {
+        background: #08090b;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 8px;
+        min-height: 180px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      /* HUD Empty State */
+      .hud-empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-grow: 1;
+        text-align: center;
+        color: #4b5563;
+        gap: 8px;
+      }
+
+      .hud-empty-state i {
+        font-size: 24px;
+        color: #374151;
+      }
+
+      .hud-empty-state h4 {
+        font-size: 13px;
+        font-weight: 700;
+        color: #9ca3af;
+        margin: 0;
+      }
+
+      .hud-empty-state p {
+        font-size: 11.5px;
+        max-width: 420px;
+        margin: 0;
+        line-height: 1.4;
+      }
+
+      /* Simulation active text state */
+      .hud-transcript-box {
+        font-size: 12.5px;
+        color: rgba(255, 255, 255, 0.45);
+        font-style: italic;
+        margin-bottom: 12px;
+        border-left: 2px solid #3b82f6;
+        padding-left: 8px;
+      }
+
+      .hud-answers-box {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .hud-bullet-point {
         background: rgba(255, 255, 255, 0.02);
         border: 1px solid rgba(255, 255, 255, 0.04);
-        padding: 10px 14px;
-        border-radius: 8px;
-        font-size: 14.5px;
-        color: #e2e8f0;
-        transform: translateY(10px);
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        color: #f3f4f6;
+        line-height: 1.45;
+        transform: translateY(8px);
         opacity: 0;
         transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
-      .sim-hud-bullet.visible {
+      .hud-bullet-point.visible {
         transform: translateY(0);
         opacity: 1;
       }
 
-      .sim-hud-bullet strong {
-        color: #c084fc;
+      .hud-bullet-point strong {
+        color: #60a5fa; /* light blue highlight keys */
+      }
+
+      /* Footer Tabs */
+      .hud-footer-tabs {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        padding-top: 8px;
+      }
+
+      .hud-tabs-left {
+        display: flex;
+        gap: 16px;
+      }
+
+      .hud-tab-item {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #6b7280;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .hud-tab-item.active {
+        color: #3b82f6;
+        border-bottom: 2px solid #3b82f6;
+        padding-bottom: 2px;
+      }
+
+      .hud-tab-item.green { color: #10b981; }
+      .hud-tab-item.cyan { color: #06b6d4; }
+      .hud-tab-item.purple { color: #a855f7; }
+      .hud-tab-item.magenta { color: #ec4899; }
+
+      .hud-size-control {
+        font-size: 10px;
+        font-weight: 700;
+        color: #9ca3af;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 2px 8px;
+        border-radius: 4px;
+      }
+
+      /* Input Bar bottom */
+      .hud-input-bar {
+        display: flex;
+        align-items: center;
+        background: #08090b;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 8px;
+        padding: 4px 8px;
+        gap: 8px;
+      }
+
+      .hud-smart-badge {
+        font-size: 10px;
+        font-weight: 700;
+        color: #d97706; /* amber */
+        background: rgba(217, 119, 6, 0.1);
+        border: 1px solid rgba(217, 119, 6, 0.3);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .hud-input-field-sim {
+        flex-grow: 1;
+        font-size: 11.5px;
+        color: #4b5563;
+        font-style: italic;
+      }
+
+      .hud-btn-send-sim {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #2563eb;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9px;
       }
 
       /* Glassmorphism card upgrades */
@@ -1093,7 +1511,6 @@
         border-color: rgba(99, 102, 241, 0.2);
         box-shadow: 0 10px 30px rgba(0,0,0,0.3);
       }
-    }
   </style>
 </head>
 <body>
@@ -1156,66 +1573,163 @@
     <div class="simulation-container">
       <div class="sim-title-wrap">
         <h2>Live Stealth <span>Q&A Simulation</span></h2>
-        <p>Watch how the covert co-pilot operates in real-time under your webcam eyeline without showing on screen share.</p>
+        <p>Watch how the co-pilot operates in real-time right under your webcam. Toggle the view below to see how our display affinity exclusion hides the HUD completely on Zoom/Teams screen shares.</p>
       </div>
-      <div class="sim-grid">
-        <!-- Card 1: Zoom / Teams Screen (What Interviewer Sees) -->
-        <div class="sim-card" id="interviewer-card">
-          <div class="sim-header">
-            <div class="dot dot-red" style="background-color: #ef4444;"></div>
-            <div class="dot dot-yellow" style="background-color: #f59e0b;"></div>
-            <div class="dot dot-green" style="background-color: #10b981;"></div>
-            <div class="sim-header-title">Zoom Meeting - Interviewer View</div>
-            <div class="sim-status">
-              <div class="sim-status-dot"></div>
-              <span>Recording Live</span>
-            </div>
-          </div>
-          <div class="sim-body" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
-            <div class="voice-wave" id="interviewer-wave">
-              <div class="wave-bar"></div>
-              <div class="wave-bar"></div>
-              <div class="wave-bar"></div>
-              <div class="wave-bar"></div>
-              <div class="wave-bar"></div>
-              <div class="wave-bar"></div>
-              <div class="wave-bar"></div>
-              <div class="wave-bar"></div>
-              <div class="wave-bar"></div>
-              <div class="wave-bar"></div>
-            </div>
-            <div class="sim-question-box" id="interviewer-question">
-              Interviewer connecting...
-            </div>
-            <div style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 16px; opacity: 0.75;">
-              <i class="fa-solid fa-circle-info"></i> The HUD overlay is completely invisible to Zoom/Teams capture.
-            </div>
-          </div>
+
+      <!-- Toggle Controls -->
+      <div class="sim-toggle-container">
+        <button id="btn-view-candidate" class="sim-toggle-btn active">
+          <i class="fa-solid fa-eye"></i> Candidate View (HUD Visible)
+        </button>
+        <button id="btn-view-interviewer" class="sim-toggle-btn">
+          <i class="fa-solid fa-eye-slash"></i> Zoom Screen Share (HUD Invisible)
+        </button>
+      </div>
+
+      <!-- Monitor Simulator -->
+      <div class="desktop-monitor">
+        <!-- Bezel top with Webcam -->
+        <div class="monitor-bezel-top">
+          <div class="monitor-webcam"></div>
         </div>
 
-        <!-- Card 2: Candidate HUD Overlay (What Candidate Sees) -->
-        <div class="sim-card active" id="hud-card">
-          <div class="sim-header">
-            <div class="dot dot-red" style="background-color: #ef4444;"></div>
-            <div class="dot dot-yellow" style="background-color: #f59e0b;"></div>
-            <div class="dot dot-green" style="background-color: #10b981;"></div>
-            <div class="sim-header-title">BackDoor AI HUD Overlay (Stealth View)</div>
-            <div class="sim-status stealth">
-              <div class="sim-status-dot"></div>
-              <span>Stealth Active</span>
+        <!-- Simulated Monitor Screen -->
+        <div class="desktop-screen">
+          
+          <!-- Floating BackDoor AI HUD (Webcam Aligned Overlay - Actual UI Widescreen Replica) -->
+          <div class="hud-app-sim" id="floating-hud">
+            <!-- Control Bar -->
+            <div class="hud-control-bar">
+              <div class="hud-control-left">
+                <div class="hud-pill red-status">
+                  <i class="fa-solid fa-eye" style="font-size: 9px;"></i> Stealth
+                </div>
+                <div class="hud-pill"><i class="fa-solid fa-volume-xmark" style="font-size: 9px;"></i> Speaker OFF</div>
+                <div class="hud-pill"><i class="fa-solid fa-microphone-slash" style="font-size: 9px;"></i> Muted</div>
+                <div class="hud-pill"><i class="fa-solid fa-desktop" style="font-size: 9px;"></i> OCR Off</div>
+                <div class="hud-pill"><i class="fa-solid fa-robot" style="font-size: 9px;"></i> Auto OFF</div>
+                <div class="hud-pill"><i class="fa-solid fa-sliders" style="font-size: 9px;"></i> Normal</div>
+              </div>
+              <div class="hud-control-right">
+                <div class="hud-session-badge">
+                  <i class="fa-regular fa-folder"></i> Google Coding r...
+                </div>
+                <button class="hud-btn-main">What should I say?</button>
+                <div class="hud-select">
+                  Ollama <i class="fa-solid fa-chevron-down" style="font-size: 8px;"></i>
+                </div>
+                <button class="hud-btn-close"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+            </div>
+
+            <!-- Status Indicator -->
+            <div class="hud-status-bar">
+              <div class="status-dot-green"></div>
+              <div id="hud-status-text">Listening... waiting for interviewer question or active screen code</div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="hud-content-box" id="hud-content-box">
+              <!-- Initial Empty State -->
+              <div class="hud-empty-state" id="hud-empty-state">
+                <i class="fa-regular fa-star"></i>
+                <h4>HUD READY</h4>
+                <p>Interviewer voice transcriptions, active screen OCR codes, or custom typed prompts will automatically stream structured talking points here.</p>
+              </div>
+
+              <!-- Active Streaming Content -->
+              <div class="hud-transcript-box" id="hud-transcript" style="display: none;"></div>
+              <div class="hud-answers-box" id="hud-answers"></div>
+            </div>
+
+            <!-- Footer Tabs -->
+            <div class="hud-footer-tabs">
+              <div class="hud-tabs-left">
+                <div class="hud-tab-item active"><i class="fa-regular fa-comment"></i> What should I say?</div>
+                <div class="hud-tab-item green"><i class="fa-solid fa-code"></i> Solve Code</div>
+                <div class="hud-tab-item cyan"><i class="fa-solid fa-camera"></i> Snap & Solve</div>
+                <div class="hud-tab-item purple"><i class="fa-solid fa-rotate-right"></i> Follow-ups</div>
+                <div class="hud-tab-item magenta"><i class="fa-solid fa-chart-pie"></i> Recap</div>
+              </div>
+              <div class="hud-size-control">A- 13px A+</div>
+            </div>
+
+            <!-- Input Bar -->
+            <div class="hud-input-bar">
+              <div class="hud-smart-badge">Smart</div>
+              <div class="hud-input-field-sim">Ask about screen or interview question, or Enter for Assist</div>
+              <div class="hud-btn-send-sim"><i class="fa-solid fa-play"></i></div>
             </div>
           </div>
-          <div class="sim-body" style="background: rgba(10, 15, 30, 0.95); justify-content: flex-start;">
-            <div class="sim-hud-container">
-              <div class="sim-hud-badge">Smart Assist</div>
-              <div class="sim-hud-transcript" id="hud-transcript">
-                Listening for audio...
+
+          <!-- Zoom Video Meeting App (Background Window) -->
+          <div class="zoom-app">
+            <div class="zoom-header">
+              <div class="zoom-window-dots">
+                <div class="zoom-dot" style="background-color: #ef4444;"></div>
+                <div class="zoom-dot" style="background-color: #f59e0b;"></div>
+                <div class="zoom-dot" style="background-color: #10b981;"></div>
               </div>
-              <div class="sim-hud-answers" id="hud-answers">
-                <!-- Bullet points dynamically loaded here -->
+              <div class="zoom-title">Zoom Meeting - Technical Assessment</div>
+              <div style="width: 32px;"></div>
+            </div>
+
+            <!-- Video Grid -->
+            <div class="zoom-grid">
+              <div class="zoom-video-main">
+                <div class="interviewer-feed-content">
+                  <div class="interviewer-avatar">G</div>
+                  <div class="interviewer-name">Interviewer (Google Tech Lead)</div>
+                  
+                  <!-- Interviewer waveform -->
+                  <div class="interviewer-wave-container" id="interviewer-wave">
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                  </div>
+
+                  <!-- Speech bubble typing question -->
+                  <div class="interviewer-speech-bubble" id="interviewer-question">
+                    Connecting to audio...
+                  </div>
+                </div>
+
+                <div class="interviewer-label">
+                  <i class="fa-solid fa-microphone" style="color: #ef4444; margin-right: 4px;"></i> Interviewer (Google)
+                </div>
+              </div>
+
+              <!-- Candidate Self View PIP -->
+              <div class="zoom-pip">
+                <div class="zoom-pip-avatar">You</div>
+                <div class="zoom-pip-label">Candidate</div>
+              </div>
+            </div>
+
+            <!-- Zoom Bottom Control Bar -->
+            <div class="zoom-toolbar">
+              <div style="width: 80px;"></div>
+              <div class="zoom-actions">
+                <div class="zoom-btn"><i class="fa-solid fa-microphone"></i>Mute</div>
+                <div class="zoom-btn"><i class="fa-solid fa-video"></i>Stop Video</div>
+                <div class="zoom-btn green"><i class="fa-solid fa-arrow-up-from-bracket"></i>Share Screen</div>
+                <div class="zoom-btn"><i class="fa-solid fa-users"></i>Participants</div>
+                <div class="zoom-btn"><i class="fa-solid fa-message"></i>Chat</div>
+                <div class="zoom-btn red"><i class="fa-solid fa-phone-slash"></i>End</div>
+              </div>
+              <div style="width: 80px; text-align: right; font-size: 10px; color: #a1a1aa; font-weight: 500;">
+                <i class="fa-solid fa-record-vinyl" style="color: #ef4444; font-size: 8px;"></i> Rec
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -1511,69 +2025,97 @@
         type();
       }
 
+      // Toggles for Candidate View vs Zoom Screen Share View
+      const btnCandidate = document.getElementById('btn-view-candidate');
+      const btnInterviewer = document.getElementById('btn-view-interviewer');
+      const floatingHud = document.getElementById('floating-hud');
+
+      if (btnCandidate && btnInterviewer && floatingHud) {
+        btnCandidate.addEventListener('click', () => {
+          btnCandidate.classList.add('active');
+          btnInterviewer.classList.remove('active');
+          floatingHud.classList.remove('stealth-hidden');
+        });
+
+        btnInterviewer.addEventListener('click', () => {
+          btnInterviewer.classList.add('active');
+          btnCandidate.classList.remove('active');
+          floatingHud.classList.add('stealth-hidden');
+        });
+      }
+
       async function runSimulation() {
         const turn = simulationTurns[currentTurnIndex];
-        const interviewerCard = document.getElementById('interviewer-card');
-        const hudCard = document.getElementById('hud-card');
         const qBox = document.getElementById('interviewer-question');
         const transBox = document.getElementById('hud-transcript');
         const answersBox = document.getElementById('hud-answers');
+        const emptyState = document.getElementById('hud-empty-state');
+        const statusText = document.getElementById('hud-status-text');
         const waveBars = document.querySelectorAll('#interviewer-wave .wave-bar');
 
-        // Step 1: Interviewer starts speaking
-        if (interviewerCard && hudCard && qBox && transBox && answersBox) {
-          interviewerCard.classList.add('active');
-          hudCard.classList.remove('active');
+        if (qBox && transBox && answersBox && emptyState && statusText) {
+          // Reset UI to initial empty state
+          emptyState.style.display = 'flex';
+          transBox.style.display = 'none';
           answersBox.innerHTML = '';
-          transBox.innerText = 'Listening for audio...';
-          
-          // Start waveform animation
-          waveBars.forEach(bar => bar.classList.add('active'));
+          statusText.innerText = 'Listening... waiting for interviewer question or active screen code';
 
-          // Type interviewer question
-          typeText(qBox, `🗣️ "${turn.question}"`, 30, () => {
-            // Stop waveform animation
-            waveBars.forEach(bar => bar.classList.remove('active'));
+          // Step 1: Interviewer starts speaking (audio capture)
+          setTimeout(() => {
+            emptyState.style.display = 'none';
+            transBox.style.display = 'block';
+            transBox.innerText = 'Listening...';
+            statusText.innerText = 'Capturing speech input...';
+            
+            // Start waveform animation
+            waveBars.forEach(bar => bar.classList.add('active'));
 
-            // Step 2: Audio is captured and transcribed
-            setTimeout(() => {
-              typeText(transBox, `🎙️ Transcribing: "${turn.transcript}"`, 20, () => {
-                
-                // Step 3: Co-pilot runs RAG and starts outputting answers
-                setTimeout(() => {
-                  hudCard.classList.add('active');
-                  interviewerCard.classList.remove('active');
+            // Type interviewer question in Zoom window
+            typeText(qBox, `"${turn.question}"`, 30, () => {
+              // Stop waveform animation
+              waveBars.forEach(bar => bar.classList.remove('active'));
+              statusText.innerText = 'Transcribing audio...';
+
+              // Step 2: Audio is transcribed on the HUD
+              setTimeout(() => {
+                typeText(transBox, `Transcribed: "${turn.transcript}"`, 20, () => {
+                  statusText.innerText = 'Synthesizing talking points via Ollama...';
                   
-                  // Load bullet points sequentially
-                  let bulletIdx = 0;
-                  function loadNextBullet() {
-                    if (bulletIdx < turn.answers.length) {
-                      const bullet = document.createElement('div');
-                      bullet.className = 'sim-hud-bullet';
-                      bullet.innerHTML = `• ${turn.answers[bulletIdx]}`;
-                      answersBox.appendChild(bullet);
-                      
-                      // Small timeout to trigger CSS slide-up transition
-                      setTimeout(() => {
-                        bullet.classList.add('visible');
-                        bulletIdx++;
-                        setTimeout(loadNextBullet, 1000);
-                      }, 50);
-                    } else {
-                      // Turn finished: wait 5 seconds and proceed to next turn
-                      setTimeout(() => {
-                        currentTurnIndex = (currentTurnIndex + 1) % simulationTurns.length;
-                        runSimulation();
-                      }, 5000);
+                  // Step 3: Co-pilot runs RAG and starts outputting answers
+                  setTimeout(() => {
+                    statusText.innerText = 'Talking points generated.';
+                    
+                    // Load bullet points sequentially
+                    let bulletIdx = 0;
+                    function loadNextBullet() {
+                      if (bulletIdx < turn.answers.length) {
+                        const bullet = document.createElement('div');
+                        bullet.className = 'hud-bullet-point';
+                        bullet.innerHTML = `• ${turn.answers[bulletIdx]}`;
+                        answersBox.appendChild(bullet);
+                        
+                        // Small timeout to trigger CSS slide-up transition
+                        setTimeout(() => {
+                          bullet.classList.add('visible');
+                          bulletIdx++;
+                          setTimeout(loadNextBullet, 1000);
+                        }, 50);
+                      } else {
+                        // Turn finished: wait 5 seconds and proceed to next turn
+                        setTimeout(() => {
+                          currentTurnIndex = (currentTurnIndex + 1) % simulationTurns.length;
+                          runSimulation();
+                        }, 5000);
+                      }
                     }
-                  }
-                  loadNextBullet();
+                    loadNextBullet();
 
-                }, 800); // delay representing LLM thinking
+                  }, 800); // delay representing LLM thinking
 
-              });
-            }, 600);
-          });
+                });
+              }, 600);
+            });
+          }, 1000); // Initial idle delay before interviewer speaks
         }
       }
 
