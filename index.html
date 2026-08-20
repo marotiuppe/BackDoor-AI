@@ -1145,9 +1145,9 @@
       </div>
       <div style="font-size: 13.5px; color: var(--text-muted);">
         Other platforms: 
-        <a id="win-dl-link" href="https://github.com/marotiuppe/BackDoor-AI/releases/latest" style="color: var(--indigo-accent); text-decoration: none; font-weight: 500;">Windows (.exe)</a> | 
-        <a id="mac-dl-link" href="https://github.com/marotiuppe/BackDoor-AI/releases/latest" style="color: var(--indigo-accent); text-decoration: none; font-weight: 500;">macOS (.dmg)</a> | 
-        <a id="linux-dl-link" href="https://github.com/marotiuppe/BackDoor-AI/releases/latest" style="color: var(--indigo-accent); text-decoration: none; font-weight: 500;">Linux (.deb)</a>
+        <a id="win-dl-link" href="https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/BackDoor.AI_latest_x64-setup.exe" style="color: var(--indigo-accent); text-decoration: none; font-weight: 500;">Windows (.exe)</a> | 
+        <a id="mac-dl-link" href="https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/BackDoor.AI_latest_universal.dmg" style="color: var(--indigo-accent); text-decoration: none; font-weight: 500;">macOS (.dmg)</a> | 
+        <a id="linux-dl-link" href="https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/backdoor-ai_latest_amd64.deb" style="color: var(--indigo-accent); text-decoration: none; font-weight: 500;">Linux (.deb)</a>
       </div>
     </div>
 
@@ -1398,35 +1398,15 @@
       });
     });
 
-    // Dynamic OS Detection & Download URL Routing with GitHub API fallback
+    // Dynamic OS Detection, Releases Counter, & Interactive Simulation
     (async function() {
       const userAgent = window.navigator.userAgent.toLowerCase();
       const mainBtn = document.getElementById('main-download-btn');
       if (!mainBtn) return;
 
-      // Default fallback URLs (send to releases page if API fetch fails)
-      let winUrl = 'https://github.com/marotiuppe/BackDoor-AI/releases/latest';
-      let macUrl = 'https://github.com/marotiuppe/BackDoor-AI/releases/latest';
-      let linuxUrl = 'https://github.com/marotiuppe/BackDoor-AI/releases/latest';
-
-      try {
-        // Fetch latest release assets dynamically from GitHub API
-        const response = await fetch('https://api.github.com/repos/marotiuppe/BackDoor-AI/releases/latest');
-        if (response.ok) {
-          const data = await response.json();
-          if (data.assets && data.assets.length > 0) {
-            const winAsset = data.assets.find(a => a.name.endsWith('.exe') && a.name.toLowerCase().includes('setup'));
-            const macAsset = data.assets.find(a => a.name.endsWith('.dmg'));
-            const linuxAsset = data.assets.find(a => a.name.endsWith('.deb') || a.name.endsWith('amd64.deb'));
-
-            if (winAsset) winUrl = winAsset.browser_download_url;
-            if (macAsset) macUrl = macAsset.browser_download_url;
-            if (linuxAsset) linuxUrl = linuxAsset.browser_download_url;
-          }
-        }
-      } catch (err) {
-        console.warn('Failed to fetch dynamic release assets from GitHub API, using fallback.', err);
-      }
+      const winUrl = 'https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/BackDoor.AI_latest_x64-setup.exe';
+      const macUrl = 'https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/BackDoor.AI_latest_universal.dmg';
+      const linuxUrl = 'https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/backdoor-ai_latest_amd64.deb';
 
       // Update the inline "Other platforms" links dynamically too
       const winLink = document.getElementById('win-dl-link');
