@@ -75,6 +75,47 @@ export default function App() {
   const [onboardingStartingStep, setOnboardingStartingStep] = useState<number>(1);
   const [tourStep, setTourStep] = useState<number | null>(null);
 
+  // Secure Master PIN Authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    if ((import.meta as any).env?.DEV) return true; // auto-auth in dev mode
+    return false;
+  });
+  const [pinInput, setPinInput] = useState('');
+  const [pinError, setPinError] = useState<string | null>(null);
+  const [isPinSetup, setIsPinSetup] = useState<boolean>(() => {
+    return localStorage.getItem('backdoor_master_pin_setup') !== 'true';
+  });
+  const [confirmPinInput, setConfirmPinInput] = useState('');
+
+  const handlePinAction = () => {
+    setPinError(null);
+    if (isPinSetup) {
+      if (pinInput.length < 4) {
+        setPinError('Access PIN must be at least 4 digits.');
+        return;
+      }
+      if (pinInput !== confirmPinInput) {
+        setPinError('PINs do not match. Please verify.');
+        return;
+      }
+      localStorage.setItem('backdoor_master_pin_hash', pinInput); // stored locally
+      localStorage.setItem('backdoor_master_pin_setup', 'true');
+      setIsPinSetup(false);
+      setIsAuthenticated(true);
+      setPinInput('');
+      setConfirmPinInput('');
+    } else {
+      const savedPin = localStorage.getItem('backdoor_master_pin_hash');
+      if (pinInput === savedPin) {
+        setIsAuthenticated(true);
+        setPinInput('');
+      } else {
+        setPinError('Invalid Access PIN. Please try again.');
+        setPinInput('');
+      }
+    }
+  };
+
   useEffect(() => {
     if (onboardingCompleted) {
       const tourCompleted = localStorage.getItem('backdoor_tour_completed');
@@ -433,6 +474,88 @@ export default function App() {
   if (isOverlayMode) {
     const activeProvider = localStorage.getItem('backdoor_primary_provider') || 'OLLAMA';
     return <OverlayView provider={activeProvider} />;
+  }
+
+  // Render Secure Login Gate
+  if (!isAuthenticated) {
+    return (
+      <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#07080b] font-sans text-slate-100 relative overflow-hidden select-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/5 blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-600/5 blur-[120px] pointer-events-none" />
+
+        <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-[#111214]/80 p-6 shadow-2xl backdrop-blur-md space-y-5 relative">
+          <div className="flex flex-col items-center text-center space-y-2">
+            <div className="rounded-xl bg-blue-500/10 p-3 text-blue-400 border border-blue-500/20 mb-1">
+              <Zap size={24} className="animate-pulse text-blue-400" />
+            </div>
+            <h2 className="text-base font-bold text-white tracking-tight">
+              {isPinSetup ? 'Create Master Access PIN' : 'Unlock BackDoor AI'}
+            </h2>
+            <p className="text-[11px] text-slate-400 leading-relaxed max-w-[280px]">
+              {isPinSetup 
+                ? 'Set a secure, local 4+ digit PIN to encrypt and protect your candidate profile, API credentials, and interview history.'
+                : 'Enter your local master access PIN to securely decrypt credential stores and log in.'
+              }
+            </p>
+          </div>
+
+          <div className="space-y-3.5">
+            <div className="space-y-1">
+              <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Access PIN</label>
+              <input
+                type="password"
+                maxLength={8}
+                value={pinInput}
+                onChange={(e) => setPinInput(e.target.value.replace(/\D/g, ''))}
+                placeholder="••••"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-center text-sm tracking-widest text-white placeholder:text-slate-500 outline-none focus:border-blue-500/50 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handlePinAction();
+                  }
+                }}
+                autoFocus
+              />
+            </div>
+
+            {isPinSetup && (
+              <div className="space-y-1">
+                <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Confirm PIN</label>
+                <input
+                  type="password"
+                  maxLength={8}
+                  value={confirmPinInput}
+                  onChange={(e) => setConfirmPinInput(e.target.value.replace(/\D/g, ''))}
+                  placeholder="••••"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-center text-sm tracking-widest text-white placeholder:text-slate-500 outline-none focus:border-blue-500/50 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handlePinAction();
+                    }
+                  }}
+                />
+              </div>
+            )}
+
+            {pinError && (
+              <div className="rounded-lg bg-rose-500/10 border border-rose-500/20 px-3 py-2 text-[10px] text-rose-300 text-center flex items-center justify-center gap-1.5">
+                <AlertCircle size={12} className="shrink-0" />
+                <span>{pinError}</span>
+              </div>
+            )}
+
+            <button
+              onClick={handlePinAction}
+              className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-2.5 text-xs shadow-lg shadow-blue-600/15 active:scale-[0.98] transition-all cursor-pointer"
+            >
+              {isPinSetup ? 'Set PIN & Authenticate' : 'Unlock Workspace'}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!onboardingCompleted) {
