@@ -10,6 +10,7 @@
 [![Qdrant](https://img.shields.io/badge/VectorDB-Qdrant-red?style=flat-square&logo=qdrant&logoColor=white)](https://qdrant.tech)
 [![Platform](https://img.shields.io/badge/Platform-Windows-blue?style=flat-square&logo=windows&logoColor=white)](https://microsoft.com/windows)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+[![Downloads](https://img.shields.io/github/downloads/marotiuppe/BackDoor-AI/total?style=flat-square&logo=github&color=blue)](https://github.com/marotiuppe/BackDoor-AI/releases)
 
 </div>
 
@@ -200,7 +201,6 @@ cd backdoor-ai-be
 npm run build
 ```
 This build script will automatically compile the frontend, build the Tauri native container, and copy the final installer executable directly to the root as `./BackDoor AI Setup.exe`.
-
 ---
 
 ## 🛠️ Troubleshooting & FAQ

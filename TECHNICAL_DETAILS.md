@@ -196,3 +196,13 @@ graph TD
     C & D & E & F --> G[Stitch System Directive Prompt]
     G --> H[Stream to LLM Provider via Command IPC]
 ```
+
+---
+
+## 📈 Analytics & Download Tracking (For Maintainers)
+
+To monitor user downloads and traffic sources for marketing optimizations:
+
+* **GitHub Release Downloads**: Total downloads of the release binary `BackDoor AI Setup.exe` are tracked natively by GitHub. You can view the live count and stats using the [GitHub Release Stats Dashboard](https://tooomm.github.io/github-release-stats/?username=marotiuppe&repository=BackDoor-AI).
+* **Landing Page Traffic**: You can embed a privacy-first, cookie-free web analytics snippet (like Cloudflare Web Analytics or Umami) inside the `<head>` of your `index.html` to measure daily visitors and click-events on the **Download** button.
+* **Social Media Campaigns**: Create campaign redirect links using **Bitly** or **Dub.co** (e.g. `bit.ly/backdoor-reddit` or `bit.ly/backdoor-tiktok`) to track which platform drives the most landing page traffic and downloads.
