@@ -865,7 +865,7 @@
         <a href="#faq">FAQ</a>
         <a href="https://github.com/marotiuppe/BackDoor-AI" target="_blank" rel="noopener noreferrer">GitHub</a>
       </nav>
-      <a href="https://github.com/marotiuppe/BackDoor-AI/releases/download/v1.0.0/BackDoor.AI.Setup.exe" class="btn btn-outline">
+      <a href="https://github.com/marotiuppe/BackDoor-AI/releases" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
         <i class="fa-solid fa-download"></i> Download
       </a>
     </div>
@@ -878,15 +878,23 @@
     </div>
     <h1>The Real-Time Intelligence Layer<br class="desktop-only"> <span>for High-Stakes Interviews</span></h1>
     <p>
-      An invisible, real-time Windows desktop co-pilot that transcribes dialogue, analyzes screen context, and displays structured talking points directly beneath your webcam lens.
+      An invisible, real-time desktop co-pilot that transcribes dialogue, analyzes screen context, and displays structured talking points directly beneath your webcam lens.
     </p>
-    <div class="hero-ctas">
-      <a href="https://github.com/marotiuppe/BackDoor-AI/releases/download/v1.0.0/BackDoor.AI.Setup.exe" class="btn btn-primary">
-        <i class="fa-solid fa-download"></i> Download for Windows (x64)
-      </a>
-      <a href="https://github.com/marotiuppe/BackDoor-AI" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
-        <i class="fa-brands fa-github"></i> View Repository
-      </a>
+    <div class="hero-ctas" style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <a id="main-download-btn" href="https://github.com/marotiuppe/BackDoor-AI/releases" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+          <i class="fa-solid fa-download"></i> Download for Windows (x64)
+        </a>
+        <a href="https://github.com/marotiuppe/BackDoor-AI" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+          <i class="fa-brands fa-github"></i> View Repository
+        </a>
+      </div>
+      <div style="font-size: 13.5px; color: var(--text-muted);">
+        Other platforms: 
+        <a href="https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/BackDoor.AI_0.1.0_x64-setup.exe" style="color: var(--indigo-accent); text-decoration: none; font-weight: 500;">Windows (.exe)</a> | 
+        <a href="https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/BackDoor.AI_0.1.0_universal.dmg" style="color: var(--indigo-accent); text-decoration: none; font-weight: 500;">macOS (.dmg)</a> | 
+        <a href="https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/backdoor-ai_0.1.0_amd64.deb" style="color: var(--indigo-accent); text-decoration: none; font-weight: 500;">Linux (.deb)</a>
+      </div>
     </div>
 
     <!-- UI Mockup -->
@@ -1094,6 +1102,25 @@
         }
       });
     });
+
+    // Dynamic OS Detection & Download URL Routing
+    (function() {
+      const userAgent = window.navigator.userAgent.toLowerCase();
+      const mainBtn = document.getElementById('main-download-btn');
+      if (!mainBtn) return;
+      
+      if (userAgent.indexOf('mac') !== -1) {
+        mainBtn.innerHTML = '<i class="fa-solid fa-download"></i> Download for macOS (.dmg)';
+        mainBtn.href = 'https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/BackDoor.AI_0.1.0_universal.dmg';
+      } else if (userAgent.indexOf('linux') !== -1) {
+        mainBtn.innerHTML = '<i class="fa-solid fa-download"></i> Download for Linux (.deb)';
+        mainBtn.href = 'https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/backdoor-ai_0.1.0_amd64.deb';
+      } else {
+        // Default to Windows
+        mainBtn.innerHTML = '<i class="fa-solid fa-download"></i> Download for Windows (.exe)';
+        mainBtn.href = 'https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/BackDoor.AI_0.1.0_x64-setup.exe';
+      }
+    })();
   </script>
 </body>
 </html>
