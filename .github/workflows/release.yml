@@ -59,8 +59,8 @@ jobs:
 
       - name: Build Tauri Application
         uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # GITHUB_TOKEN is omitted here to prevent tauri-action from automatically creating draft releases.
+        # We handle all uploads and release publishing explicitly via softprops/action-gh-release below.
         with:
           projectPath: 'backdoor-ai-be'
           args: ${{ matrix.args }}
@@ -69,20 +69,31 @@ jobs:
         if: matrix.platform == 'macos-latest'
         run: |
           mkdir -p dist
-          mv backdoor-ai-be/target/universal-apple-darwin/release/bundle/dmg/*.dmg dist/BackDoor.AI_latest_universal.dmg
+          cp backdoor-ai-be/target/universal-apple-darwin/release/bundle/dmg/*.dmg dist/
+          cp backdoor-ai-be/target/universal-apple-darwin/release/bundle/app/*.tar.gz dist/ || true
+          cp dist/*.dmg dist/BackDoor.AI_latest_universal.dmg
 
       - name: Rename and Prepare Assets (Linux)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           mkdir -p dist
-          mv backdoor-ai-be/target/release/bundle/deb/*.deb dist/backdoor-ai_latest_amd64.deb
+          cp backdoor-ai-be/target/release/bundle/deb/*.deb dist/
+          cp backdoor-ai-be/target/release/bundle/appimage/*.AppImage dist/ || true
+          cp backdoor-ai-be/target/release/bundle/rpm/*.rpm dist/ || true
+          cp dist/*.deb dist/BackDoor.AI_latest_amd64.deb
 
       - name: Rename and Prepare Assets (Windows)
         if: matrix.platform == 'windows-latest'
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path dist
-          Move-Item -Path backdoor-ai-be/target/release/bundle/nsis/*.exe -Destination dist/BackDoor.AI_latest_x64-setup.exe
+          Copy-Item -Path backdoor-ai-be/target/release/bundle/nsis/*.exe -Destination dist/ -Force
+          Copy-Item -Path backdoor-ai-be/target/release/bundle/msi/*.msi -Destination dist/ -Force -ErrorAction SilentlyContinue
+          $installer = Get-ChildItem -Path dist/*-setup.exe | Select-Object -First 1
+          if (-not $installer) {
+              $installer = Get-ChildItem -Path dist/*.exe | Select-Object -First 1
+          }
+          Copy-Item -Path $installer.FullName -Destination dist/BackDoor.AI_latest_x64-setup.exe -Force
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
@@ -92,6 +103,6 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: 'BackDoor AI ${{ github.ref_name }}'
           body: 'Privacy-first live interview assistant. Please select the installer matching your OS below.'
-          draft: true
+          draft: false
           prerelease: false
           files: dist/*

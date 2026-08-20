@@ -26,7 +26,7 @@
 | :--- | :--- | :--- |
 | 🪟 **Windows** | NSIS Installer (`.exe`) | [**⬇️ Get Latest Windows Installer**](https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/BackDoor.AI_latest_x64-setup.exe) |
 | 🍏 **macOS** | Universal Bundle (`.dmg`) | [**⬇️ Get Latest macOS Installer**](https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/BackDoor.AI_latest_universal.dmg) |
-| 🐧 **Linux** | Debian Package (`.deb`) | [**⬇️ Get Latest Linux Installer**](https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/backdoor-ai_latest_amd64.deb) |
+| 🐧 **Linux** | Debian Package (`.deb`) | [**⬇️ Get Latest Linux Installer**](https://github.com/marotiuppe/BackDoor-AI/releases/latest/download/BackDoor.AI_latest_amd64.deb) |
 
 ---
 
