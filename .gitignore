@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+backdoor-ai-ui/node_modules/
+
+# Rust build artifacts
+target/
+backdoor-ai-be/target/
+
+# Frontend build outputs
+dist/
+backdoor-ai-ui/dist/
+
+# Executables & logs
+*.exe
+!BackDoor AI Setup.exe
+tauri-logs/
+*.log
+
+# Databases & Local Vector Storage
+*.db
+*.sqlite
+*.sqlite3
+storage/
+backdoor-ai-be/storage/
+.qdrant-initialized
+backdoor-ai-be/.qdrant-initialized
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Secrets & Local Configs
+.env
+.env.*
+!.env.example
+
+# Vite build temp files
+*.timestamp-*.mjs
+
+# Local scratch files
+*.py
+
+# Documentation folder
+docs/

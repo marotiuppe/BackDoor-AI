@@ -1,0 +1,12 @@
+{
+  "name": "backdoor-ai-be",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "tauri": "tauri",
+    "build": "tauri build && powershell -Command \"Copy-Item -Path target/release/bundle/nsis/BackDoor*.exe -Destination '../BackDoor AI Setup.exe' -Force\""
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.11.4"
+  }
+}
