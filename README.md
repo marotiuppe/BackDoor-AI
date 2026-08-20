@@ -85,6 +85,16 @@ To guide you through your first boot, BackDoor AI features an immersive setup wi
 
 ---
 
+## 🔒 Secure Local Access PIN Gate
+
+To protect your candidate identity, saved API credentials, and sensitive interview session history, BackDoor AI features a secure offline authentication gate:
+
+1. **First-Time Setup (PIN Creation)**: On the initial boot of the application, you will be guided to set up a secure 4-to-8 digit master passcode.
+2. **Subsequent Boots (Workspace Locking)**: Every next time the app opens, it launches in a locked state behind a modern glassmorphic PIN entry screen. You must type your secret passcode to unlock your dashboard and access the co-pilot.
+3. **100% Offline & Private**: Your passcode hash is stored completely locally on disk and evaluated locally. No authentication payloads or credential data ever leave your machine.
+
+---
+
 ## 💡 How to Use BackDoor AI During an Interview
 
 Follow these steps for a successful setup:
